@@ -1,7 +1,8 @@
 {
-  "build": {
-    "env": {
-      "NODE_VERSION": "18"
-    }
+  "buildCommand": "npx vite build",
+  "installCommand": "npm install",
+  "outputDirectory": "dist",
+  "env": {
+    "NODE_VERSION": "18"
   }
 }
