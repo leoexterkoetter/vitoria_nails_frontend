@@ -1,0 +1,163 @@
+.booking-page {
+  min-height: 100vh;
+  background: var(--background);
+  padding-bottom: 4rem;
+}
+
+.booking-header {
+  background: var(--primary);
+  padding: 2rem;
+  color: white;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.booking-header h1 {
+  font-size: 2rem;
+}
+
+.booking-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 20px;
+}
+
+.form-section {
+  margin-bottom: 3rem;
+}
+
+.form-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--text);
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.service-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 2px solid #e0e0e0;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: center;
+}
+
+.service-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.service-card.selected {
+  border-color: var(--primary);
+  background: #FFF8FB;
+}
+
+.service-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.service-card .price {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0.5rem 0;
+}
+
+.service-card .duration {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.slots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 1rem;
+}
+
+.slot-btn {
+  padding: 1rem;
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.slot-btn:hover {
+  border-color: var(--primary);
+}
+
+.slot-btn.selected {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.no-slots {
+  padding: 2rem;
+  text-align: center;
+  color: #666;
+  background: white;
+  border-radius: 8px;
+}
+
+.summary {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  border: 2px solid var(--primary);
+}
+
+.summary h3 {
+  margin-bottom: 1.5rem;
+  color: var(--text);
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.summary-item:last-child {
+  border-bottom: none;
+}
+
+.btn-large {
+  width: 100%;
+  padding: 1.25rem;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+  .slots-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
