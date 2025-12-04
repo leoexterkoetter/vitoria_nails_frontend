@@ -26,8 +26,7 @@ export default function Login() {
 
     try {
       const response = await authService.login(formData);
-      
-      // Redirecionar baseado no role
+
       if (response.user.role === 'admin') {
         navigate('/admin/dashboard');
       } else {
@@ -41,14 +40,14 @@ export default function Login() {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <div className="auth-header">
-          <h1>🎀 Vitoria Nail Designer</h1>
-          <p>Entre para agendar seu horário</p>
+    <div className="auth-container page-fade">
+      <div className="auth-card premium-card">
+        <div className="auth-header fade-in-up">
+          <h1 className="logo-title">✨ Vitoria Nail Designer</h1>
+          <p className="subtitle">Entre para agendar seu horário</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="auth-form">
+        <form onSubmit={handleSubmit} className="auth-form fade-in-up delay-1">
           {error && <div className="error-alert">{error}</div>}
 
           <div className="input-group">
@@ -58,7 +57,7 @@ export default function Login() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="input"
+              className="input focus-animate"
               placeholder="seu@email.com"
               required
             />
@@ -71,25 +70,25 @@ export default function Login() {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="input"
+              className="input focus-animate"
               placeholder="••••••••"
               required
             />
           </div>
 
-          <button 
-            type="submit" 
-            className="btn btn-primary btn-lg"
+          <button
+            type="submit"
+            className="btn btn-primary btn-lg btn-glow hover-lift"
             disabled={loading}
           >
             {loading ? 'Entrando...' : 'Entrar'}
           </button>
         </form>
 
-        <div className="auth-footer">
+        <div className="auth-footer fade-in-up delay-2">
           <p>
             Não tem conta?{' '}
-            <Link to="/register" className="auth-link">
+            <Link to="/register" className="auth-link underline-animate">
               Cadastre-se aqui
             </Link>
           </p>

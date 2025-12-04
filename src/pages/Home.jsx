@@ -1,10 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Calendar, Clock, Home as HomeIcon, User, LogOut, Sparkles, ArrowRight } from 'lucide-react';
+import {
+  Calendar,
+  Clock,
+  Home as HomeIcon,
+  User,
+  LogOut,
+  Sparkles,
+  ArrowRight
+} from 'lucide-react';
+
 import authService from '../services/authService';
 import './Home.css';
 
-function Home() {
+export default function Home() {
   const navigate = useNavigate();
   const [userName, setUserName] = useState('');
 
@@ -54,134 +63,143 @@ function Home() {
   ];
 
   return (
-    <div className="user-dashboard">
-      <nav className="user-nav">
-        <div className="nav-brand">
-          <h2>💅 Vitoria Nail Designer</h2>
-        </div>
-        <div className="nav-links">
-          <button className="nav-link active" onClick={() => navigate('/home')}>
+    <div className="home-premium page-fade">
+      
+      {/* ===== NAVBAR PREMIUM ===== */}
+      <nav className="navbar-premium">
+        <h2 className="brand-premium">💅 Vitoria Nail Designer</h2>
+
+        <div className="nav-actions">
+          <button className="nav-icon active" onClick={() => navigate('/home')}>
             <HomeIcon size={20} />
-            Início
+            <span>Início</span>
           </button>
-          <button className="nav-link" onClick={() => navigate('/services')}>
+
+          <button className="nav-icon" onClick={() => navigate('/services')}>
             <Calendar size={20} />
-            Serviços
+            <span>Serviços</span>
           </button>
-          <button className="nav-link" onClick={() => navigate('/my-appointments')}>
+
+          <button className="nav-icon" onClick={() => navigate('/my-appointments')}>
             <Clock size={20} />
-            Meus Agendamentos
+            <span>Agendamentos</span>
           </button>
-          <button className="nav-link" onClick={() => navigate('/profile')}>
+
+          <button className="nav-icon" onClick={() => navigate('/profile')}>
             <User size={20} />
-            Perfil
+            <span>Perfil</span>
           </button>
-          <button className="nav-link logout" onClick={handleLogout}>
+
+          <button className="nav-icon logout" onClick={handleLogout}>
             <LogOut size={20} />
-            Sair
           </button>
         </div>
       </nav>
 
-      <div className="home-content">
-        {/* Hero Section */}
-        <section className="hero-section">
-          <div className="hero-content">
-            <div className="hero-text">
-              <h1>Olá, {userName}! 👋</h1>
-              <p className="hero-subtitle">
-                Bem-vinda ao seu espaço de beleza e cuidado. Aqui você encontra os melhores serviços de nail design.
-              </p>
-              <button className="hero-btn" onClick={() => navigate('/booking')}>
-                <Sparkles size={20} />
-                Agendar Agora
+
+      {/* ===== HERO PREMIUM ===== */}
+      <section className="hero-premium fade-in-up">
+        <div className="hero-text">
+          <h1 className="hero-title">
+            Olá, {userName}! <span className="wave">👋</span>
+          </h1>
+
+          <p className="hero-subtitle">
+            Bem-vinda ao seu espaço de beleza. Agende, escolha serviços e acompanhe suas sessões.
+          </p>
+
+          <button className="hero-button hover-lift btn-glow" onClick={() => navigate('/booking')}>
+            <Sparkles size={20} />
+            Agendar Agora
+          </button>
+        </div>
+
+        <div className="hero-art fade-in-up delay-1">
+          <div className="floating-emoji">💅✨</div>
+        </div>
+      </section>
+
+
+      {/* ===== COMO FUNCIONA ===== */}
+      <section className="how-section fade-in-up delay-1">
+        <h2 className="section-title">Como Funciona</h2>
+
+        <div className="steps-premium">
+          <div className="step-card hover-lift">
+            <div className="step-icon">📅</div>
+            <h3>Escolha o Serviço</h3>
+            <p>Navegue e selecione o serviço ideal para você</p>
+          </div>
+
+          <div className="step-card hover-lift">
+            <div className="step-icon">⏰</div>
+            <h3>Data e Horário</h3>
+            <p>Escolha o melhor horário disponível</p>
+          </div>
+
+          <div className="step-card hover-lift">
+            <div className="step-icon">✅</div>
+            <h3>Confirmação</h3>
+            <p>Finalize seu agendamento rapidamente</p>
+          </div>
+        </div>
+      </section>
+
+
+      {/* ===== SERVIÇOS POPULARES ===== */}
+      <section className="services-section fade-in-up delay-2">
+        <div className="section-header">
+          <h2>Serviços Populares</h2>
+
+          <button className="view-all hover-lift" onClick={() => navigate('/services')}>
+            Ver Todos <ArrowRight size={18} />
+          </button>
+        </div>
+
+        <div className="services-grid">
+          {popularServices.map(service => (
+            <div key={service.id} className="service-card hover-lift">
+              <div className="service-emoji">{service.image}</div>
+
+              <h3>{service.name}</h3>
+              <p className="service-desc">{service.description}</p>
+
+              <div className="service-info">
+                <span className="price">
+                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
+                    .format(service.price)}
+                </span>
+
+                <span className="duration">
+                  <Clock size={14} />
+                  {service.duration} min
+                </span>
+              </div>
+
+              <button
+                className="service-btn hover-lift btn-glow"
+                onClick={() =>
+                  navigate('/booking', { state: { selectedService: service } })
+                }
+              >
+                Agendar
               </button>
             </div>
-            <div className="hero-image">
-              <div className="hero-decoration">💅✨</div>
-            </div>
-          </div>
-        </section>
+          ))}
+        </div>
+      </section>
 
-        {/* Como Funciona */}
-        <section className="how-it-works">
-          <h2>Como Funciona</h2>
-          <div className="steps-grid">
-            <div className="step-card">
-              <div className="step-number">1</div>
-              <div className="step-icon">📅</div>
-              <h3>Escolha o Serviço</h3>
-              <p>Navegue pelos nossos serviços e escolha o que melhor se adapta a você</p>
-            </div>
-            
-            <div className="step-card">
-              <div className="step-number">2</div>
-              <div className="step-icon">⏰</div>
-              <h3>Selecione Data e Horário</h3>
-              <p>Escolha o dia e horário que funciona melhor para sua agenda</p>
-            </div>
-            
-            <div className="step-card">
-              <div className="step-number">3</div>
-              <div className="step-icon">✅</div>
-              <h3>Confirme seu Agendamento</h3>
-              <p>Finalize e aguarde a confirmação. É rápido e fácil!</p>
-            </div>
-          </div>
-        </section>
 
-        {/* Serviços Populares */}
-        <section className="popular-services">
-          <div className="section-header">
-            <h2>Serviços Populares</h2>
-            <button className="view-all-btn" onClick={() => navigate('/services')}>
-              Ver Todos
-              <ArrowRight size={18} />
-            </button>
-          </div>
-          
-          <div className="services-grid">
-            {popularServices.map(service => (
-              <div key={service.id} className="service-card-home">
-                <div className="service-emoji">{service.image}</div>
-                <h3>{service.name}</h3>
-                <p className="service-desc">{service.description}</p>
-                <div className="service-footer">
-                  <div className="service-details">
-                    <span className="service-price">
-                      {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(service.price)}
-                    </span>
-                    <span className="service-duration">
-                      <Clock size={14} />
-                      {service.duration} min
-                    </span>
-                  </div>
-                  <button 
-                    className="btn-book-service"
-                    onClick={() => navigate('/booking', { state: { selectedService: service } })}
-                  >
-                    Agendar
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+      {/* ===== CTA FINAL ===== */}
+      <section className="cta-premium fade-in-up delay-3">
+        <h2>Pronta para transformar suas unhas?</h2>
+        <p>Agende agora mesmo e garanta o melhor atendimento!</p>
 
-        {/* Call to Action */}
-        <section className="cta-section">
-          <div className="cta-content">
-            <h2>Pronta para transformar suas unhas?</h2>
-            <p>Agende seu horário agora e garanta unhas perfeitas!</p>
-            <button className="cta-btn" onClick={() => navigate('/booking')}>
-              <Calendar size={20} />
-              Fazer Agendamento
-            </button>
-          </div>
-        </section>
-      </div>
+        <button className="cta-button hover-lift btn-glow" onClick={() => navigate('/booking')}>
+          <Calendar size={20} />
+          Fazer Agendamento
+        </button>
+      </section>
     </div>
   );
 }
-
-export default Home;

@@ -211,3 +211,90 @@ a:hover {
 .text-center { text-align: center; }
 .mt-2 { margin-top: var(--spacing-md); }
 .mb-2 { margin-bottom: var(--spacing-md); }
+/* ===============================================
+   MICRO-ANIMAÇÕES PREMIUM (GLOBAL)
+   =============================================== */
+
+/* Fade suave em páginas */
+.page-fade {
+  animation: fadeIn 0.5s ease forwards;
+  opacity: 0;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Animação suave de hover */
+.hover-lift {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Botões com ripple (efeito de clique elegante) */
+.btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.btn:active::after {
+  width: 200px;
+  height: 200px;
+  left: var(--x);
+  top: var(--y);
+  opacity: 1;
+  transition: width 0.4s ease, height 0.4s ease, opacity 0.8s ease;
+}
+
+/* Inputs vivas */
+.input {
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+}
+
+.input:focus {
+  transform: scale(1.014);
+}
+
+/* Cards com fade-in ao carregar */
+.card {
+  animation: cardIn 0.4s ease forwards;
+  opacity: 0;
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Animação em listas e grids */
+.list-item-animated {
+  animation: fadeSlideUp 0.45s ease forwards;
+  opacity: 0;
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Suavização de mudanças no layout */
+* {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
