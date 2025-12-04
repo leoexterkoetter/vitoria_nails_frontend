@@ -1,99 +1,75 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import authService from '../../services/authService';
-import './Auth.css';
+import { useState } from "react";
+import "./Login.css";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
+  const handleLogin = async () => {
     setLoading(true);
 
     try {
-      const response = await authService.login(formData);
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password: senha })
+      });
 
-      if (response.user.role === 'admin') {
-        navigate('/admin/dashboard');
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.msg || "Erro no login");
       } else {
-        navigate('/home');
+        localStorage.setItem("token", data.token);
+        navigate("/home");
       }
+
     } catch (err) {
-      setError(err.error || 'Erro ao fazer login');
-    } finally {
-      setLoading(false);
+      alert("Erro ao conectar com o servidor.");
     }
+
+    setLoading(false);
   };
 
   return (
-    <div className="auth-container page-fade">
-      <div className="auth-card premium-card">
-        <div className="auth-header fade-in-up">
-          <h1 className="logo-title">✨ Vitoria Nail Designer</h1>
-          <p className="subtitle">Entre para agendar seu horário</p>
-        </div>
+    <div className="login-wrapper">
 
-        <form onSubmit={handleSubmit} className="auth-form fade-in-up delay-1">
-          {error && <div className="error-alert">{error}</div>}
-
-          <div className="input-group">
-            <label className="input-label">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="input focus-animate"
-              placeholder="seu@email.com"
-              required
-            />
-          </div>
-
-          <div className="input-group">
-            <label className="input-label">Senha</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className="input focus-animate"
-              placeholder="••••••••"
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="btn btn-primary btn-lg btn-glow hover-lift"
-            disabled={loading}
-          >
-            {loading ? 'Entrando...' : 'Entrar'}
-          </button>
-        </form>
-
-        <div className="auth-footer fade-in-up delay-2">
-          <p>
-            Não tem conta?{' '}
-            <Link to="/register" className="auth-link underline-animate">
-              Cadastre-se aqui
-            </Link>
-          </p>
-        </div>
+      {/* Cabeçalho com animação */}
+      <div className="login-header">
+        <h1>Bem-vinda ✨</h1>
+        <p>Acesse sua conta para continuar</p>
       </div>
+
+      {/* Card */}
+      <div className="login-card">
+
+        <input 
+          type="email"
+          placeholder="Seu e-mail"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+
+        <input 
+          type="password"
+          placeholder="Sua senha"
+          value={senha}
+          onChange={(e) => setSenha(e.target.value)}
+        />
+
+        <button onClick={handleLogin} disabled={loading}>
+          {loading ? "Entrando..." : "Entrar"}
+        </button>
+
+      </div>
+
+      {/* Rodapé */}
+      <p className="login-footer">
+        Não tem conta? <span onClick={() => navigate("/register")}>Criar agora</span>
+      </p>
     </div>
   );
 }
