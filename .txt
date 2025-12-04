@@ -1,0 +1,13 @@
+Remover tempo do procedimento.
+* Deixar apto pra mexer no celular tbm.
+* Login apenas com nome completo e numero.
+* ADM poder mover, excluir e adicionar agendamentos.
+* Aparecer uma mensagem na tela de confirmação de agendamento (pra cliente) mas é opcional essa parte .
+* Tela do cliente Calendario: apenas as disponibilidades de data livre que o adm colocar.
+* Remover área "Nossos Serviços"
+* Na tela de adm:  agendamentos>ações - coloca um botao de lixeirinha pra mim poder excluir o agendamento. Tem a opção de confirmar, recusar e quero uma op. de excluir. (nessa parte de ações, preciso tirar umas duvidas, dai qnd for fazer isso me chama que eu explico)
+* Quando uma vaga é preenchida por algm, ela sai automaticamente do calendario de agendamentos para outras clientes?
+* Tela do cliente Ao decorrer do agendamento, ta indo em numeros cada passo (1. 2. 3...) adiciona mais dois:
+5. coloca um informativo, em forma de enquete, tipo: "Voce possui alguma unha quebrada ou danificada que necessita de um novo alongamento? (  ) sim (  ) nao. Caso a cliente selecione SIM, aparece um campo de observação pra ela escrever, opcionalmente. E um aviso prévio que está sujeito a uma taxa de R$5,00 por cada unha que necessita de um novo alongamento.
+
+6. no final coloca uma pagina pra cliente selecionar a forma de pagamento, (pix ou dinheiro).

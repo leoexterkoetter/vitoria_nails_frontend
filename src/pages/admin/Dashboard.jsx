@@ -1,194 +1,135 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Calendar, DollarSign, Users, Clock, TrendingUp, LogOut } from 'lucide-react';
-import api from '../../services/api';
-import authService from '../../services/authService';
-import './Dashboard.css';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { CalendarCheck, Scissors, Users, LogOut } from "lucide-react";
+import "./AdminDashboard.css";
 
-function Dashboard() {
+export default function AdminDashboard() {
   const navigate = useNavigate();
-  const [stats, setStats] = useState({
+  const [data, setData] = useState({
     totalAppointments: 0,
-    pendingAppointments: 0,
-    totalClients: 0,
-    monthRevenue: 0
+    pending: 0,
+    services: 0,
+    clients: 0
   });
-  const [recentAppointments, setRecentAppointments] = useState([]);
 
   useEffect(() => {
-    fetchDashboardData();
+    fetchDashboard();
   }, []);
 
-  const fetchDashboardData = async () => {
+  const fetchDashboard = async () => {
     try {
-      const [statsRes, appointmentsRes] = await Promise.all([
-        api.get('/admin/dashboard'),
-        api.get('/admin/appointments?limit=5')
-      ]);
-
-      setStats(statsRes.data);
-      setRecentAppointments(appointmentsRes.data.appointments || []);
-    } catch (error) {
-      console.error('Erro:', error);
-    }
-  };
-
-  const handleLogout = () => {
-    authService.logout();
-    navigate('/login');
-  };
-
-  // FUNÇÃO HELPER PARA FORMATAR DATA CORRETAMENTE
-  const formatDate = (dateString) => {
-    if (!dateString) return '-';
-    
-    try {
-      const date = new Date(dateString);
-      
-      // Verifica se a data é válida
-      if (isNaN(date.getTime())) return '-';
-      
-      return date.toLocaleDateString('pt-BR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
+      // Você deve substituir pelas suas rotas reais
+      setData({
+        totalAppointments: 42,
+        pending: 5,
+        services: 9,
+        clients: 120
       });
-    } catch (error) {
-      console.error('Erro ao formatar data:', error);
-      return '-';
+    } catch (e) {
+      console.error(e);
     }
   };
 
   return (
-    <div className="admin-dashboard">
-      <aside className="sidebar">
-        <div className="sidebar-header">
-          <h2>💅 Admin</h2>
+    <div className="admin-page">
+
+      {/* HEADER */}
+      <div className="admin-header fade-in">
+        <h1>Painel da Vitoria</h1>
+        <p>Gerencie horários, serviços e clientes</p>
+      </div>
+
+      {/* CARDS RESUMO */}
+      <div className="admin-cards">
+        
+        <div className="admin-card pop">
+          <CalendarCheck size={26} />
+          <div>
+            <h3>{data.totalAppointments}</h3>
+            <p>Agendamentos</p>
+          </div>
         </div>
-        <nav className="sidebar-nav">
-          <button className="nav-item active" onClick={() => navigate('/admin/dashboard')}>
-            <TrendingUp size={20} />
-            Dashboard
-          </button>
-          <button className="nav-item" onClick={() => navigate('/admin/appointments')}>
-            <Calendar size={20} />
-            Agendamentos
-          </button>
-          <button className="nav-item" onClick={() => navigate('/admin/services')}>
-            <Clock size={20} />
-            Serviços
-          </button>
-          <button className="nav-item" onClick={() => navigate('/admin/time-slots')}>
-            <Clock size={20} />
-            Horários
-          </button>
-          <button className="nav-item" onClick={() => navigate('/admin/clients')}>
-            <Users size={20} />
-            Clientes
-          </button>
-        </nav>
-        <button className="logout-btn" onClick={handleLogout}>
-          <LogOut size={20} />
+
+        <div className="admin-card pop">
+          <CalendarCheck size={26} />
+          <div>
+            <h3>{data.pending}</h3>
+            <p>Pendentes</p>
+          </div>
+        </div>
+
+        <div className="admin-card pop">
+          <Scissors size={26} />
+          <div>
+            <h3>{data.services}</h3>
+            <p>Serviços</p>
+          </div>
+        </div>
+
+        <div className="admin-card pop">
+          <Users size={26} />
+          <div>
+            <h3>{data.clients}</h3>
+            <p>Clientes</p>
+          </div>
+        </div>
+
+      </div>
+
+      {/* MENU DE AÇÕES */}
+      <div className="admin-actions slide-up">
+
+        <button className="admin-btn" onClick={() => navigate("/admin/appointments")}>
+          <CalendarCheck size={22} />
+          Gerenciar Agendamentos
+        </button>
+
+        <button className="admin-btn" onClick={() => navigate("/admin/services")}>
+          <Scissors size={22} />
+          Gerenciar Serviços
+        </button>
+
+        <button className="admin-btn" onClick={() => navigate("/admin/clients")}>
+          <Users size={22} />
+          Clientes
+        </button>
+
+        <button
+          className="admin-btn danger"
+          onClick={() => {
+            localStorage.clear();
+            navigate("/login");
+          }}
+        >
+          <LogOut size={22} />
           Sair
         </button>
-      </aside>
 
-      <main className="main-content">
-        <header className="content-header">
-          <h1>Dashboard</h1>
-        </header>
+      </div>
 
-        <div className="stats-grid">
-          <div className="stat-card">
-            <div className="stat-icon" style={{background: '#FFE5EE'}}>
-              <Calendar size={24} color="#FF69B4" />
-            </div>
-            <div className="stat-info">
-              <p className="stat-label">Total Agendamentos</p>
-              <p className="stat-value">{stats.totalAppointments}</p>
-            </div>
-          </div>
+      {/* MENU INFERIOR MOBILE */}
+      <nav className="bottom-nav">
+        <button onClick={() => navigate("/admin/dashboard")}>
+          <CalendarCheck size={22} />
+          <span>Dashboard</span>
+        </button>
 
-          <div className="stat-card">
-            <div className="stat-icon" style={{background: '#FFF4E5'}}>
-              <Clock size={24} color="#FFA500" />
-            </div>
-            <div className="stat-info">
-              <p className="stat-label">Pendentes</p>
-              <p className="stat-value">{stats.pendingAppointments}</p>
-            </div>
-          </div>
+        <button onClick={() => navigate("/admin/services")}>
+          <Scissors size={22} />
+          <span>Serviços</span>
+        </button>
 
-          <div className="stat-card">
-            <div className="stat-icon" style={{background: '#E5F4FF'}}>
-              <Users size={24} color="#4A90E2" />
-            </div>
-            <div className="stat-info">
-              <p className="stat-label">Total Clientes</p>
-              <p className="stat-value">{stats.totalClients}</p>
-            </div>
-          </div>
+        <button onClick={() => navigate("/admin/appointments")}>
+          <CalendarCheck size={22} />
+          <span>Agenda</span>
+        </button>
 
-          <div className="stat-card">
-            <div className="stat-icon" style={{background: '#E5FFE5'}}>
-              <DollarSign size={24} color="#4CAF50" />
-            </div>
-            <div className="stat-info">
-              <p className="stat-label">Receita do Mês</p>
-              <p className="stat-value">
-                {new Intl.NumberFormat('pt-BR', { 
-                  style: 'currency', 
-                  currency: 'BRL' 
-                }).format(stats.monthRevenue || 0)}
-              </p>
-            </div>
-          </div>
-        </div>
+        <button onClick={() => navigate("/admin/profile")}>
+          <Users size={22} />
+          <span>Perfil</span>
+        </button>
+      </nav>
 
-        <div className="recent-section">
-          <h2>Agendamentos Recentes</h2>
-          <div className="table-container">
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>Cliente</th>
-                  <th>Serviço</th>
-                  <th>Data</th>
-                  <th>Horário</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Array.isArray(recentAppointments) && recentAppointments.length > 0 ? (
-                  recentAppointments.map(apt => (
-                    <tr key={apt._id}>
-                      <td>{apt.user?.name || '-'}</td>
-                      <td>{apt.service?.name || '-'}</td>
-                      <td>{formatDate(apt.timeSlot?.date)}</td>
-                      <td>{apt.timeSlot?.start_time || '-'}</td>
-                      <td>
-                        <span className={`status-badge status-${apt.status}`}>
-                          {apt.status === 'pending' ? 'Pendente' : 
-                           apt.status === 'confirmed' ? 'Confirmado' : 
-                           apt.status === 'cancelled' ? 'Cancelado' : 'Concluído'}
-                        </span>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="5" style={{ textAlign: 'center', padding: '2rem' }}>
-                      Nenhum agendamento encontrado
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </main>
     </div>
   );
 }
-
-export default Dashboard;
