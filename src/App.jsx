@@ -1,6 +1,16 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import authService from './services/authService';
 import Booking from './pages/Booking';
+import AdminDashboard from './pages/admin/Dashboard';
+import AdminAppointments from './pages/admin/Appointments';
+import AdminServices from './pages/admin/Services';
+import AdminClients from './pages/admin/Clients';
+import AdminTimeSlots from './pages/admin/TimeSlots';
+import MyAppointments from './pages/MyAppointments';
+import Profile from './pages/Profile';
+
+
+
 
 // Páginas de autenticação
 import Login from './pages/auth/Login';
@@ -84,56 +94,22 @@ function App() {
           }
         />
        <Route path="/booking" element={<PrivateRoute><Booking /></PrivateRoute>} />
+      <Route path="/my-appointments" element={<PrivateRoute><MyAppointments /></PrivateRoute>} />
         <Route
-          path="/my-appointments"
-          element={
-            <PrivateRoute>
-              <ComingSoon title="Meus Agendamentos" />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <PrivateRoute>
-              <ComingSoon title="Perfil" />
-            </PrivateRoute>
-          }
-        />
+  path="/profile"
+  element={
+    <PrivateRoute>
+      <Profile />
+    </PrivateRoute>
+  }
+/>
 
         {/* Rotas admin */}
-        <Route
-          path="/admin/dashboard"
-          element={
-            <PrivateRoute adminOnly>
-              <ComingSoon title="Dashboard Admin" />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/admin/schedule"
-          element={
-            <PrivateRoute adminOnly>
-              <ComingSoon title="Gerenciar Horários" />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/admin/services"
-          element={
-            <PrivateRoute adminOnly>
-              <ComingSoon title="Gerenciar Serviços" />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/admin/clients"
-          element={
-            <PrivateRoute adminOnly>
-              <ComingSoon title="Clientes" />
-            </PrivateRoute>
-          }
-        />
+       <Route path="/admin/dashboard" element={<PrivateRoute adminOnly><AdminDashboard /></PrivateRoute>} />
+        <Route path="/admin/time-slots" element={<PrivateRoute adminOnly><AdminTimeSlots /></PrivateRoute>} />
+              <Route path="/admin/services" element={<PrivateRoute adminOnly><AdminServices /></PrivateRoute>} />
+     <Route path="/admin/clients" element={<PrivateRoute adminOnly><AdminClients /></PrivateRoute>} />
+<Route path="/admin/appointments" element={<PrivateRoute adminOnly><AdminAppointments /></PrivateRoute>} />
 
         {/* 404 */}
         <Route path="*" element={<ComingSoon title="Página não encontrada" />} />

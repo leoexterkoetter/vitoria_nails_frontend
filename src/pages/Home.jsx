@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Calendar, Clock, Heart, Sparkles } from 'lucide-react';
+import { Calendar, Clock, Home as HomeIcon, User, LogOut, Sparkles, ArrowRight } from 'lucide-react';
+import authService from '../services/authService';
 import './Home.css';
 
 function Home() {
@@ -8,96 +9,177 @@ function Home() {
   const [userName, setUserName] = useState('');
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    setUserName(user.name || 'Cliente');
+    const name = localStorage.getItem('userName');
+    setUserName(name || 'Cliente');
   }, []);
 
+  const handleLogout = () => {
+    authService.logout();
+    navigate('/login');
+  };
+
+  const popularServices = [
+    {
+      id: 1,
+      name: 'Alongamento em Gel',
+      price: 120,
+      duration: 120,
+      image: '💅',
+      description: 'Unhas perfeitas e duradouras'
+    },
+    {
+      id: 2,
+      name: 'Esmaltação em Gel',
+      price: 60,
+      duration: 60,
+      image: '✨',
+      description: 'Cor vibrante por mais tempo'
+    },
+    {
+      id: 3,
+      name: 'Nail Art',
+      price: 40,
+      duration: 45,
+      image: '🎨',
+      description: 'Designs exclusivos e criativos'
+    },
+    {
+      id: 4,
+      name: 'Spa para Pés',
+      price: 90,
+      duration: 90,
+      image: '🦶',
+      description: 'Relaxamento e cuidado completo'
+    }
+  ];
+
   return (
-    <div className="home-page">
-      <header className="hero">
-        <div className="hero-content">
-          <h1>Bem-vinda, {userName}! 💅</h1>
-          <p>Transforme suas unhas em obras de arte</p>
-          <button 
-            className="btn btn-primary"
-            onClick={() => navigate('/services')}
-          >
-            Ver Serviços
+    <div className="user-dashboard">
+      <nav className="user-nav">
+        <div className="nav-brand">
+          <h2>💅 Vitoria Nail Designer</h2>
+        </div>
+        <div className="nav-links">
+          <button className="nav-link active" onClick={() => navigate('/home')}>
+            <HomeIcon size={20} />
+            Início
+          </button>
+          <button className="nav-link" onClick={() => navigate('/services')}>
+            <Calendar size={20} />
+            Serviços
+          </button>
+          <button className="nav-link" onClick={() => navigate('/my-appointments')}>
+            <Clock size={20} />
+            Meus Agendamentos
+          </button>
+          <button className="nav-link" onClick={() => navigate('/profile')}>
+            <User size={20} />
+            Perfil
+          </button>
+          <button className="nav-link logout" onClick={handleLogout}>
+            <LogOut size={20} />
+            Sair
           </button>
         </div>
-      </header>
+      </nav>
 
-      <section className="how-it-works">
-        <h2>Como Funciona</h2>
-        <div className="steps">
-          <div className="step">
-            <div className="step-icon">
-              <Sparkles size={32} />
+      <div className="home-content">
+        {/* Hero Section */}
+        <section className="hero-section">
+          <div className="hero-content">
+            <div className="hero-text">
+              <h1>Olá, {userName}! 👋</h1>
+              <p className="hero-subtitle">
+                Bem-vinda ao seu espaço de beleza e cuidado. Aqui você encontra os melhores serviços de nail design.
+              </p>
+              <button className="hero-btn" onClick={() => navigate('/booking')}>
+                <Sparkles size={20} />
+                Agendar Agora
+              </button>
             </div>
-            <h3>1. Escolha o Serviço</h3>
-            <p>Navegue pelos nossos serviços e escolha o que mais combina com você</p>
-          </div>
-
-          <div className="step">
-            <div className="step-icon">
-              <Calendar size={32} />
+            <div className="hero-image">
+              <div className="hero-decoration">💅✨</div>
             </div>
-            <h3>2. Selecione o Horário</h3>
-            <p>Escolha o dia e horário que melhor se encaixa na sua agenda</p>
           </div>
+        </section>
 
-          <div className="step">
-            <div className="step-icon">
-              <Clock size={32} />
+        {/* Como Funciona */}
+        <section className="how-it-works">
+          <h2>Como Funciona</h2>
+          <div className="steps-grid">
+            <div className="step-card">
+              <div className="step-number">1</div>
+              <div className="step-icon">📅</div>
+              <h3>Escolha o Serviço</h3>
+              <p>Navegue pelos nossos serviços e escolha o que melhor se adapta a você</p>
             </div>
-            <h3>3. Confirme e Pronto!</h3>
-            <p>Receba a confirmação e compareça no horário marcado</p>
+            
+            <div className="step-card">
+              <div className="step-number">2</div>
+              <div className="step-icon">⏰</div>
+              <h3>Selecione Data e Horário</h3>
+              <p>Escolha o dia e horário que funciona melhor para sua agenda</p>
+            </div>
+            
+            <div className="step-card">
+              <div className="step-number">3</div>
+              <div className="step-icon">✅</div>
+              <h3>Confirme seu Agendamento</h3>
+              <p>Finalize e aguarde a confirmação. É rápido e fácil!</p>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="featured-services">
-        <h2>Serviços Populares</h2>
-        <div className="services-grid">
-          <div className="service-card" onClick={() => navigate('/services')}>
-            <div className="service-icon">💅</div>
-            <h3>Alongamento em Gel</h3>
-            <p>R$ 120,00</p>
+        {/* Serviços Populares */}
+        <section className="popular-services">
+          <div className="section-header">
+            <h2>Serviços Populares</h2>
+            <button className="view-all-btn" onClick={() => navigate('/services')}>
+              Ver Todos
+              <ArrowRight size={18} />
+            </button>
           </div>
-
-          <div className="service-card" onClick={() => navigate('/services')}>
-            <div className="service-icon">✨</div>
-            <h3>Esmaltação em Gel</h3>
-            <p>R$ 60,00</p>
+          
+          <div className="services-grid">
+            {popularServices.map(service => (
+              <div key={service.id} className="service-card-home">
+                <div className="service-emoji">{service.image}</div>
+                <h3>{service.name}</h3>
+                <p className="service-desc">{service.description}</p>
+                <div className="service-footer">
+                  <div className="service-details">
+                    <span className="service-price">
+                      {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(service.price)}
+                    </span>
+                    <span className="service-duration">
+                      <Clock size={14} />
+                      {service.duration} min
+                    </span>
+                  </div>
+                  <button 
+                    className="btn-book-service"
+                    onClick={() => navigate('/booking', { state: { selectedService: service } })}
+                  >
+                    Agendar
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
+        </section>
 
-          <div className="service-card" onClick={() => navigate('/services')}>
-            <div className="service-icon">🎨</div>
-            <h3>Nail Art</h3>
-            <p>R$ 40,00</p>
+        {/* Call to Action */}
+        <section className="cta-section">
+          <div className="cta-content">
+            <h2>Pronta para transformar suas unhas?</h2>
+            <p>Agende seu horário agora e garanta unhas perfeitas!</p>
+            <button className="cta-btn" onClick={() => navigate('/booking')}>
+              <Calendar size={20} />
+              Fazer Agendamento
+            </button>
           </div>
-
-          <div className="service-card" onClick={() => navigate('/services')}>
-            <div className="service-icon">🦶</div>
-            <h3>Spa dos Pés</h3>
-            <p>R$ 90,00</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="cta">
-        <div className="cta-content">
-          <Heart size={48} className="cta-icon" />
-          <h2>Pronta para suas unhas perfeitas?</h2>
-          <p>Agende agora e garanta seu horário!</p>
-          <button 
-            className="btn btn-primary btn-large"
-            onClick={() => navigate('/booking')}
-          >
-            Agendar Agora
-          </button>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
   );
 }

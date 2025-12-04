@@ -35,44 +35,56 @@ function Booking() {
   };
 
   const fetchAvailableSlots = async () => {
-    try {
-      const response = await api.get('/appointments/available-slots', {
-        params: {
-          date: selectedDate,
-          serviceId: selectedService._id
-        }
-      });
-      setAvailableSlots(response.data.slots);
-    } catch (error) {
-      console.error('Erro ao buscar horários:', error);
-      setAvailableSlots([]);
-    }
-  };
+  try {
+    const response = await api.get('/appointments/available-slots', {
+      params: {
+        date: selectedDate,
+        serviceId: selectedService._id
+      }
+    });
+    console.log('Response:', response.data);
+    
+    // API retorna array direto, não objeto com propriedade slots
+    setAvailableSlots(Array.isArray(response.data) ? response.data : []);
+  } catch (error) {
+    console.error('Erro ao buscar horários:', error);
+    setAvailableSlots([]);
+  }
+};
+
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    if (!selectedService || !selectedSlot) {
-      alert('Selecione um serviço e um horário');
-      return;
-    }
+  e.preventDefault();
+  
+  if (!selectedService || !selectedSlot) {
+    alert('Selecione um serviço e um horário');
+    return;
+  }
 
-    setLoading(true);
-    try {
-      await api.post('/appointments', {
-        service_id: selectedService._id,
-  time_slot_id: selectedSlot._id,
-        notes
-      });
-      
-      alert('Agendamento realizado com sucesso!');
-      navigate('/my-appointments');
-    } catch (error) {
-      alert('Erro ao agendar: ' + (error.response?.data?.error || error.message));
-    } finally {
-      setLoading(false);
-    }
-  };
+  console.log('Enviando:', {
+    serviceId: selectedService._id,
+    timeSlotId: selectedSlot._id,
+    notes
+  });
+
+  setLoading(true);
+  try {
+    await api.post('/appointments', {
+      serviceId: selectedService._id,
+      timeSlotId: selectedSlot._id,
+      notes
+    });
+    
+    alert('Agendamento solicitado com sucesso!');
+    navigate('/my-appointments');
+  } catch (error) {
+    console.error('Erro:', error);
+    alert('Erro ao agendar: ' + (error.response?.data?.error || error.message));
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('pt-BR', {
