@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CalendarCheck, Scissors, Users, LogOut } from "lucide-react";
-import "./AdminDashboard.css";
+import "./Dashboard.css";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
