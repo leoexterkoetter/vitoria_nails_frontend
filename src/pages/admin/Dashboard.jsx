@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Calendar, DollarSign, Users, Clock, TrendingUp, LogOut } from 'lucide-react';
+import { Calendar, DollarSign, Users, Clock, TrendingUp, LogOut, Menu, X, ChevronRight, Bell } from 'lucide-react';
 import api from '../../services/api';
 import authService from '../../services/authService';
 import './Dashboard.css';
 
 function Dashboard() {
   const navigate = useNavigate();
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [showSidebar, setShowSidebar] = useState(false);
   const [stats, setStats] = useState({
     totalAppointments: 0,
     pendingAppointments: 0,
@@ -17,6 +19,16 @@ function Dashboard() {
 
   useEffect(() => {
     fetchDashboardData();
+    
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      if (window.innerWidth >= 768) {
+        setShowSidebar(false);
+      }
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const fetchDashboardData = async () => {
@@ -38,154 +50,225 @@ function Dashboard() {
     navigate('/login');
   };
 
-  // FUNÇÃO HELPER PARA FORMATAR DATA CORRETAMENTE
   const formatDate = (dateString) => {
     if (!dateString) return '-';
-    
     try {
       const date = new Date(dateString);
-      
-      // Verifica se a data é válida
       if (isNaN(date.getTime())) return '-';
-      
       return date.toLocaleDateString('pt-BR', {
         day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
+        month: 'short',
+        year: isMobile ? undefined : 'numeric'
       });
     } catch (error) {
-      console.error('Erro ao formatar data:', error);
       return '-';
     }
   };
 
+  const getStatusConfig = (status) => {
+    const configs = {
+      pending: { text: 'Pendente', color: '#F59E0B', bg: '#FEF3C7' },
+      confirmed: { text: 'Confirmado', color: '#10B981', bg: '#D1FAE5' },
+      cancelled: { text: 'Cancelado', color: '#EF4444', bg: '#FEE2E2' },
+      completed: { text: 'Concluído', color: '#3B82F6', bg: '#DBEAFE' }
+    };
+    return configs[status] || configs.pending;
+  };
+
+  const menuItems = [
+    { icon: TrendingUp, label: 'Dashboard', path: '/admin/dashboard', active: true },
+    { icon: Calendar, label: 'Agendamentos', path: '/admin/appointments' },
+    { icon: Clock, label: 'Serviços', path: '/admin/services' },
+    { icon: Clock, label: 'Horários', path: '/admin/time-slots' },
+    { icon: Users, label: 'Clientes', path: '/admin/clients' }
+  ];
+
   return (
-    <div className="admin-dashboard">
-      <aside className="sidebar">
-        <div className="sidebar-header">
-          <h2>💅 Admin</h2>
+    <div className="admin-layout">
+      {/* Mobile Header */}
+      {isMobile && (
+        <header className="mobile-header">
+          <button className="menu-btn" onClick={() => setShowSidebar(true)}>
+            <Menu size={24} />
+          </button>
+          <div className="header-brand">
+            <span className="brand-emoji">💅</span>
+            <span className="brand-text">Admin</span>
+          </div>
+          <button className="notification-btn">
+            <Bell size={20} />
+            {stats.pendingAppointments > 0 && (
+              <span className="notification-badge">{stats.pendingAppointments}</span>
+            )}
+          </button>
+        </header>
+      )}
+
+      {/* Sidebar */}
+      <aside className={`sidebar ${showSidebar ? 'show' : ''}`}>
+        <div className="sidebar-content">
+          <div className="sidebar-header">
+            <div className="sidebar-brand">
+              <span className="brand-emoji-large">💅</span>
+              <div>
+                <h2>Vitoria Nail</h2>
+                <p>Painel Admin</p>
+              </div>
+            </div>
+            {isMobile && (
+              <button className="close-sidebar" onClick={() => setShowSidebar(false)}>
+                <X size={24} />
+              </button>
+            )}
+          </div>
+
+          <nav className="sidebar-nav">
+            {menuItems.map((item, index) => (
+              <button
+                key={index}
+                className={`nav-item ${item.active ? 'active' : ''}`}
+                onClick={() => {
+                  navigate(item.path);
+                  setShowSidebar(false);
+                }}
+              >
+                <item.icon size={20} />
+                <span>{item.label}</span>
+                {isMobile && <ChevronRight size={18} className="nav-arrow" />}
+              </button>
+            ))}
+          </nav>
+
+          <button className="logout-btn" onClick={handleLogout}>
+            <LogOut size={20} />
+            <span>Sair</span>
+          </button>
         </div>
-        <nav className="sidebar-nav">
-          <button className="nav-item active" onClick={() => navigate('/admin/dashboard')}>
-            <TrendingUp size={20} />
-            Dashboard
-          </button>
-          <button className="nav-item" onClick={() => navigate('/admin/appointments')}>
-            <Calendar size={20} />
-            Agendamentos
-          </button>
-          <button className="nav-item" onClick={() => navigate('/admin/services')}>
-            <Clock size={20} />
-            Serviços
-          </button>
-          <button className="nav-item" onClick={() => navigate('/admin/time-slots')}>
-            <Clock size={20} />
-            Horários
-          </button>
-          <button className="nav-item" onClick={() => navigate('/admin/clients')}>
-            <Users size={20} />
-            Clientes
-          </button>
-        </nav>
-        <button className="logout-btn" onClick={handleLogout}>
-          <LogOut size={20} />
-          Sair
-        </button>
       </aside>
 
+      {/* Sidebar Overlay (Mobile) */}
+      {isMobile && showSidebar && (
+        <div className="sidebar-overlay" onClick={() => setShowSidebar(false)} />
+      )}
+
+      {/* Main Content */}
       <main className="main-content">
-        <header className="content-header">
-          <h1>Dashboard</h1>
-        </header>
+        <div className="content-header">
+          <div>
+            <h1>Dashboard</h1>
+            <p>Visão geral do seu negócio</p>
+          </div>
+        </div>
 
+        {/* Stats Grid */}
         <div className="stats-grid">
-          <div className="stat-card">
-            <div className="stat-icon" style={{background: '#FFE5EE'}}>
-              <Calendar size={24} color="#FF69B4" />
+          <div className="stat-card stat-primary">
+            <div className="stat-icon">
+              <Calendar size={24} />
             </div>
             <div className="stat-info">
-              <p className="stat-label">Total Agendamentos</p>
-              <p className="stat-value">{stats.totalAppointments}</p>
+              <span className="stat-label">Total Agendamentos</span>
+              <span className="stat-value">{stats.totalAppointments}</span>
             </div>
           </div>
 
-          <div className="stat-card">
-            <div className="stat-icon" style={{background: '#FFF4E5'}}>
-              <Clock size={24} color="#FFA500" />
+          <div className="stat-card stat-warning">
+            <div className="stat-icon">
+              <Clock size={24} />
             </div>
             <div className="stat-info">
-              <p className="stat-label">Pendentes</p>
-              <p className="stat-value">{stats.pendingAppointments}</p>
+              <span className="stat-label">Pendentes</span>
+              <span className="stat-value">{stats.pendingAppointments}</span>
             </div>
           </div>
 
-          <div className="stat-card">
-            <div className="stat-icon" style={{background: '#E5F4FF'}}>
-              <Users size={24} color="#4A90E2" />
+          <div className="stat-card stat-info">
+            <div className="stat-icon">
+              <Users size={24} />
             </div>
             <div className="stat-info">
-              <p className="stat-label">Total Clientes</p>
-              <p className="stat-value">{stats.totalClients}</p>
+              <span className="stat-label">Total Clientes</span>
+              <span className="stat-value">{stats.totalClients}</span>
             </div>
           </div>
 
-          <div className="stat-card">
-            <div className="stat-icon" style={{background: '#E5FFE5'}}>
-              <DollarSign size={24} color="#4CAF50" />
+          <div className="stat-card stat-success">
+            <div className="stat-icon">
+              <DollarSign size={24} />
             </div>
             <div className="stat-info">
-              <p className="stat-label">Receita do Mês</p>
-              <p className="stat-value">
+              <span className="stat-label">Receita do Mês</span>
+              <span className="stat-value">
                 {new Intl.NumberFormat('pt-BR', { 
                   style: 'currency', 
-                  currency: 'BRL' 
+                  currency: 'BRL',
+                  maximumFractionDigits: 0
                 }).format(stats.monthRevenue || 0)}
-              </p>
+              </span>
             </div>
           </div>
         </div>
 
-        <div className="recent-section">
-          <h2>Agendamentos Recentes</h2>
-          <div className="table-container">
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>Cliente</th>
-                  <th>Serviço</th>
-                  <th>Data</th>
-                  <th>Horário</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Array.isArray(recentAppointments) && recentAppointments.length > 0 ? (
-                  recentAppointments.map(apt => (
-                    <tr key={apt._id}>
-                      <td>{apt.user?.name || '-'}</td>
-                      <td>{apt.service?.name || '-'}</td>
-                      <td>{formatDate(apt.timeSlot?.date)}</td>
-                      <td>{apt.timeSlot?.start_time || '-'}</td>
-                      <td>
-                        <span className={`status-badge status-${apt.status}`}>
-                          {apt.status === 'pending' ? 'Pendente' : 
-                           apt.status === 'confirmed' ? 'Confirmado' : 
-                           apt.status === 'cancelled' ? 'Cancelado' : 'Concluído'}
-                        </span>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="5" style={{ textAlign: 'center', padding: '2rem' }}>
-                      Nenhum agendamento encontrado
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+        {/* Recent Appointments */}
+        <section className="appointments-section">
+          <div className="section-header">
+            <h2>Agendamentos Recentes</h2>
+            <button 
+              className="btn-view-all"
+              onClick={() => navigate('/admin/appointments')}
+            >
+              Ver Todos
+              <ChevronRight size={16} />
+            </button>
           </div>
-        </div>
+
+          <div className="appointments-list">
+            {Array.isArray(recentAppointments) && recentAppointments.length > 0 ? (
+              recentAppointments.map(apt => {
+                const statusConfig = getStatusConfig(apt.status);
+                return (
+                  <div key={apt._id} className="appointment-card">
+                    <div className="appointment-avatar">
+                      {apt.user?.name?.charAt(0).toUpperCase() || 'U'}
+                    </div>
+                    <div className="appointment-details">
+                      <div className="appointment-client">
+                        <span className="client-name">{apt.user?.name || '-'}</span>
+                        <span 
+                          className="status-badge"
+                          style={{ 
+                            background: statusConfig.bg,
+                            color: statusConfig.color
+                          }}
+                        >
+                          {statusConfig.text}
+                        </span>
+                      </div>
+                      <div className="appointment-service">
+                        {apt.service?.name || '-'}
+                      </div>
+                      <div className="appointment-meta">
+                        <span className="meta-item">
+                          <Calendar size={14} />
+                          {formatDate(apt.timeSlot?.date)}
+                        </span>
+                        <span className="meta-item">
+                          <Clock size={14} />
+                          {apt.timeSlot?.start_time || '-'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="empty-state">
+                <Calendar size={48} />
+                <p>Nenhum agendamento recente</p>
+              </div>
+            )}
+          </div>
+        </section>
       </main>
     </div>
   );

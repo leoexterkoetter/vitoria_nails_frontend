@@ -1,50 +1,35 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import authService from '../../services/authService';
+import { Mail, Lock, User, Eye, EyeOff, Sparkles } from 'lucide-react';
+import authService from '../../services/authService.js';
 import './Auth.css';
 
-export default function Register() {
+function Register() {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    phone: '',
-    password: '',
-    confirmPassword: ''
+    password: ''
   });
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-
-    // Validações
-    if (formData.password !== formData.confirmPassword) {
-      setError('As senhas não coincidem');
-      return;
-    }
-
-    if (formData.password.length < 6) {
-      setError('A senha deve ter no mínimo 6 caracteres');
-      return;
-    }
-
     setLoading(true);
 
     try {
-      const { confirmPassword, ...userData } = formData;
-      await authService.register(userData);
+      await authService.register(
+        formData.name,
+        formData.email,
+        formData.password
+      );
+
       navigate('/home');
     } catch (err) {
-      setError(err.error || 'Erro ao criar conta');
+      setError(err.response?.data?.error || 'Erro ao criar conta');
     } finally {
       setLoading(false);
     }
@@ -52,97 +37,97 @@ export default function Register() {
 
   return (
     <div className="auth-container">
-      <div className="auth-card">
+      <div className="auth-content">
         <div className="auth-header">
-          <h1>🎀 Vitoria Nail Designer</h1>
-          <p>Crie sua conta e comece a agendar</p>
+          <div className="brand-icon">💅</div>
+          <h1>Criar Conta</h1>
+          <p>Junte-se a nós para cuidar das suas unhas</p>
         </div>
 
         <form onSubmit={handleSubmit} className="auth-form">
-          {error && <div className="error-alert">{error}</div>}
+          {error && (
+            <div className="error-message">
+              {error}
+            </div>
+          )}
 
           <div className="input-group">
-            <label className="input-label">Nome Completo</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="input"
-              placeholder="Seu nome"
-              required
-            />
+            <label>Nome Completo</label>
+            <div className="input-wrapper">
+              <User size={20} />
+              <input
+                type="text"
+                placeholder="Seu nome"
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
+                required
+              />
+            </div>
           </div>
 
           <div className="input-group">
-            <label className="input-label">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="input"
-              placeholder="seu@email.com"
-              required
-            />
+            <label>Email</label>
+            <div className="input-wrapper">
+              <Mail size={20} />
+              <input
+                type="email"
+                placeholder="seu@email.com"
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+                required
+              />
+            </div>
           </div>
 
           <div className="input-group">
-            <label className="input-label">Telefone</label>
-            <input
-              type="tel"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              className="input"
-              placeholder="(00) 00000-0000"
-            />
+            <label>Senha</label>
+            <div className="input-wrapper">
+              <Lock size={20} />
+              <input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Mínimo 6 caracteres"
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+                required
+                minLength={6}
+              />
+              <button
+                type="button"
+                className="toggle-password"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
           </div>
 
-          <div className="input-group">
-            <label className="input-label">Senha</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className="input"
-              placeholder="Mínimo 6 caracteres"
-              required
-            />
-          </div>
-
-          <div className="input-group">
-            <label className="input-label">Confirmar Senha</label>
-            <input
-              type="password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              className="input"
-              placeholder="Digite a senha novamente"
-              required
-            />
-          </div>
-
-          <button 
-            type="submit" 
-            className="btn btn-primary btn-lg"
-            disabled={loading}
-          >
-            {loading ? 'Criando conta...' : 'Criar Conta'}
+          <button type="submit" className="btn-submit" disabled={loading}>
+            {loading ? (
+              <div className="spinner-small"></div>
+            ) : (
+              <>
+                <Sparkles size={20} />
+                Criar Conta
+              </>
+            )}
           </button>
-        </form>
 
-        <div className="auth-footer">
-          <p>
-            Já tem conta?{' '}
-            <Link to="/login" className="auth-link">
-              Faça login aqui
+          <div className="auth-footer">
+            <p>Já tem uma conta?</p>
+            <Link to="/login" className="link-primary">
+              Fazer login
             </Link>
-          </p>
-        </div>
+          </div>
+        </form>
       </div>
     </div>
   );
 }
+
+export default Register;

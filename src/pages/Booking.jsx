@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Calendar, Clock, ArrowLeft, NotebookPen, Sparkles } from 'lucide-react';
+import { Clock, ArrowLeft, Notebook, Sparkles } from 'lucide-react';
 import api from '../services/api';
 import './Booking.css';
 

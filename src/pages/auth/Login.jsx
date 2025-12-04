@@ -1,75 +1,116 @@
-import { useState } from "react";
-import "./Login.css";
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Mail, Lock, Eye, EyeOff, Sparkles } from 'lucide-react';
+import authService from '../../services/authService.js';
+import './Auth.css';
 
-export default function Login() {
+function Login() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleLogin = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
     setLoading(true);
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password: senha })
-      });
+      const response = await authService.login(formData.email, formData.password);
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert(data.msg || "Erro no login");
+      if (response.user.role === 'admin') {
+        navigate('/admin/dashboard');
       } else {
-        localStorage.setItem("token", data.token);
-        navigate("/home");
+        navigate('/home');
       }
-
     } catch (err) {
-      alert("Erro ao conectar com o servidor.");
+      setError(err.response?.data?.error || 'Erro ao fazer login');
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
-    <div className="login-wrapper">
+    <div className="auth-container">
+      <div className="auth-content">
+        <div className="auth-header">
+          <div className="brand-icon">💅</div>
+          <h1>Vitoria Nail Designer</h1>
+          <p>Entre para agendar seus atendimentos</p>
+        </div>
 
-      {/* Cabeçalho com animação */}
-      <div className="login-header">
-        <h1>Bem-vinda ✨</h1>
-        <p>Acesse sua conta para continuar</p>
+        <form onSubmit={handleSubmit} className="auth-form">
+          {error && (
+            <div className="error-message">
+              {error}
+            </div>
+          )}
+
+          <div className="input-group">
+            <label>Email</label>
+            <div className="input-wrapper">
+              <Mail size={20} />
+              <input
+                type="email"
+                placeholder="seu@email.com"
+                value={formData.email}
+                onChange={e => setFormData({ ...formData, email: e.target.value })}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="input-group">
+            <label>Senha</label>
+            <div className="input-wrapper">
+              <Lock size={20} />
+              <input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="••••••••"
+                value={formData.password}
+                onChange={e => setFormData({ ...formData, password: e.target.value })}
+                required
+              />
+              <button
+                type="button"
+                className="toggle-password"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" className="btn-submit" disabled={loading}>
+            {loading ? (
+              <div className="spinner-small"></div>
+            ) : (
+              <>
+                <Sparkles size={20} />
+                Entrar
+              </>
+            )}
+          </button>
+
+          <div className="auth-footer">
+            <p>Não tem uma conta?</p>
+            <Link to="/register" className="link-primary">
+              Criar conta gratuita
+            </Link>
+          </div>
+
+          <div className="demo-credentials">
+            <p className="demo-title">Credenciais de teste:</p>
+            <p className="demo-info">Admin: vitoria@naildesigner.com / admin123</p>
+          </div>
+        </form>
       </div>
-
-      {/* Card */}
-      <div className="login-card">
-
-        <input 
-          type="email"
-          placeholder="Seu e-mail"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-
-        <input 
-          type="password"
-          placeholder="Sua senha"
-          value={senha}
-          onChange={(e) => setSenha(e.target.value)}
-        />
-
-        <button onClick={handleLogin} disabled={loading}>
-          {loading ? "Entrando..." : "Entrar"}
-        </button>
-
-      </div>
-
-      {/* Rodapé */}
-      <p className="login-footer">
-        Não tem conta? <span onClick={() => navigate("/register")}>Criar agora</span>
-      </p>
     </div>
   );
 }
+
+export default Login;
