@@ -1,136 +1,142 @@
 /* ======================
-   Wrapper geral
+   Layout geral
 ====================== */
 .home-wrapper {
   padding: 20px;
-  max-width: 500px;
+  padding-bottom: 90px; /* espaço para o navbar fixo */
+  max-width: 900px;
   margin: auto;
-  animation: fadeIn 0.5s ease-out;
-}
-
-/* ======================
-   Banner principal
-====================== */
-.home-banner {
-  background: linear-gradient(135deg, #ff86c9, #d63384);
-  color: white;
-  padding: 26px;
-  border-radius: 18px;
-  text-align: left;
-  box-shadow: 0 8px 24px rgba(255, 81, 164, 0.35);
-  animation: slideDown 0.6s ease;
-}
-
-.home-banner h2 {
-  margin-bottom: 6px;
-  font-size: 1.8rem;
-  font-weight: 800;
-}
-
-.home-banner p {
-  opacity: 0.9;
-}
-
-/* ======================
-   Quick actions (iFood style)
-====================== */
-.quick-actions {
-  margin-top: 20px;
-  display: flex;
-  gap: 15px;
+  font-family: 'Inter', sans-serif;
+  color: #111827;
   animation: fadeIn 0.6s ease-out;
 }
 
-.quick-btn {
+
+/* ======================
+   Header clean
+====================== */
+.home-header {
+  margin-top: 10px;
+  padding: 4px 2px;
+  text-align: left;
+  background: transparent;
+}
+
+.home-header h2 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #111827; /* preto */
+}
+
+.home-header p {
+  margin-top: 6px;
+  font-size: 0.96rem;
+  color: #3f3f46; /* cinza escuro elegante */
+  line-height: 1.45;
+}
+
+
+/* ======================
+   Botões do topo
+====================== */
+.top-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.top-btn {
   flex: 1;
-  padding: 14px;
-  background: white;
-  border-radius: 14px;
+  padding: 12px 18px;
+  background: linear-gradient(135deg, #ec599c, #d63384); /* rosa moderno da paleta */
+  color: white;
   border: none;
-  font-weight: 600;
-  font-size: 1rem;
-
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 0.95rem;
   cursor: pointer;
-
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(214, 51, 132, 0.28);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.quick-btn:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 26px rgba(255, 81, 164, 0.18);
+.top-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 26px rgba(214, 51, 132, 0.37);
 }
 
+
 /* ======================
-   Título de seção
+   Seção de serviços
 ====================== */
 .section-title {
-  margin-top: 28px;
-  font-size: 1.4rem;
+  margin-top: 34px;
+  font-size: 1.5rem;
   font-weight: 700;
-  color: #b71f70;
-  animation: fadeIn 0.6s ease;
+  color: #d63384;
 }
 
-/* ======================
-   Cards de serviços
-====================== */
 .services-list {
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+
+@media (min-width: 360px) {
+  .services-list { grid-template-columns: 1fr 1fr; }
+}
+
+@media (min-width: 700px) {
+  .services-list { grid-template-columns: 1fr 1fr 1fr; }
 }
 
 .service-card {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  border-radius: 14px;
-  padding: 18px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(14px);
+  border-radius: 20px;
+  padding: 20px;
   border: 1px solid rgba(255, 182, 228, 0.35);
-
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  animation: slideUp 0.6s ease;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+  transition: 0.3s ease;
 }
 
 .service-card:hover {
-  transform: translateY(-6px) scale(1.02);
-  box-shadow: 0 12px 26px rgba(255, 81, 164, 0.18);
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 14px 28px rgba(255, 81, 164, 0.22);
 }
 
 .service-card h4 {
   margin-bottom: 6px;
   font-weight: 700;
-  color: #c21873;
+  color: #d63384;
 }
 
 .service-card p {
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   color: #555;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  line-height: 1.5;
 }
 
-/* Botão do card */
 .service-btn {
   width: 100%;
   padding: 12px;
-  background: linear-gradient(135deg, #ff5ca8, #d63384);
+  background: linear-gradient(135deg, #ff77b7, #ff76bb);
   border: none;
   color: white;
   font-size: 1rem;
   font-weight: 600;
-  border-radius: 10px;
+  border-radius: 14px;
   cursor: pointer;
-
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: 0.2s ease;
 }
 
 .service-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 20px rgba(255, 105, 180, 0.28);
+  box-shadow: 0 10px 22px rgba(255, 105, 180, 0.28);
 }
+
 
 /* ======================
    Animações
@@ -141,11 +147,25 @@
 }
 
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+
+/* ======================
+   Responsividade
+====================== */
+@media (max-width: 480px) {
+  .home-wrapper { padding: 16px; }
+  .home-header h2 { font-size: 1.5rem; }
+  .home-header p { font-size: 0.9rem; }
+
+  .top-btn {
+    font-size: 0.85rem;
+    padding: 11px;
+  }
+
+  .section-title { font-size: 1.25rem; }
+  .service-card p { font-size: 0.85rem; }
+  .service-btn { font-size: 0.875rem; }
 }

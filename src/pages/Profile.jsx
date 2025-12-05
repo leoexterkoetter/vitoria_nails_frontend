@@ -5,6 +5,7 @@ import api from '../services/api';
 import authService from '../services/authService';
 import './MyAppointments.css';
 
+
 function Profile() {
   const navigate = useNavigate();
   const [user, setUser] = useState({
@@ -79,33 +80,7 @@ function Profile() {
 
   return (
     <div className="user-dashboard">
-      <nav className="user-nav">
-        <div className="nav-brand">
-          <h2>💅 Vitoria Nail Designer</h2>
-        </div>
-        <div className="nav-links">
-          <button className="nav-link" onClick={() => navigate('/home')}>
-            <Home size={20} />
-            Início
-          </button>
-          <button className="nav-link" onClick={() => navigate('/services')}>
-            <Calendar size={20} />
-            Serviços
-          </button>
-          <button className="nav-link" onClick={() => navigate('/my-appointments')}>
-            <Clock size={20} />
-            Meus Agendamentos
-          </button>
-          <button className="nav-link active" onClick={() => navigate('/profile')}>
-            <User size={20} />
-            Perfil
-          </button>
-          <button className="nav-link logout" onClick={handleLogout}>
-            <LogOut size={20} />
-            Sair
-          </button>
-        </div>
-      </nav>
+      
 
       <main className="user-content">
         <header className="page-header">

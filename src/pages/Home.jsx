@@ -1,53 +1,60 @@
+// src/pages/Home.jsx
 import './Home.css';
 import { useNavigate } from 'react-router-dom';
+import { Calendar, Clock } from 'lucide-react';
 
 export default function Home() {
   const navigate = useNavigate();
+  const userName = localStorage.getItem('userName') || 'Cliente';
+
+  const services = [
+    { name: 'Alongamento Molde F1', description: 'Ideal para quem quer unhas lindas e bem cuidadas.' },
+    { name: 'Banho em Gel', description: 'Proteção extra para unhas fortes e naturais.' },
+    { name: 'Blindagem', description: 'Resistência, brilho e acabamento impecável.' }
+  ];
 
   return (
     <div className="home-wrapper">
 
-      {/* Banner principal */}
-      <div className="home-banner">
-        <h2>Unhas de alto nível ✨</h2>
-        <p>Agende seu horário com a Vitoria Nail Designer</p>
+      {/* =======================
+          Header
+      ======================= */}
+      <div className="home-header">
+        <h2>Olá, {userName}! 💅🏻</h2>
+        <p>
+          Bem vinda ao seu espaço de beleza e cuidado.  
+          Aqui você encontra os melhores serviços de nail design. ✨
+        </p>
+
+        <div className="top-buttons">
+          <button className="top-btn" onClick={() => navigate('/booking')}>
+            ✨ Agendar Agora
+          </button>
+
+          <button className="top-btn" onClick={() => navigate('/my-appointments')}>
+            📅 Meus Agendamentos
+          </button>
+        </div>
       </div>
 
-      {/* Ações principais estilo app */}
-      <div className="quick-actions">
-        <button onClick={() => navigate('/agendar')} className="quick-btn">
-          📅 Agendar horário
-        </button>
+      {/* =======================
+          Serviços
+      ======================= */}
+      <h3 className="section-title">Serviços mais pedidos ✨</h3>
 
-        <button onClick={() => navigate('/meus-agendamentos')} className="quick-btn">
-          📝 Meus agendamentos
-        </button>
-      </div>
-
-      {/* Título dos serviços */}
-      <h3 className="section-title">Serviços disponíveis</h3>
-
-      {/* Cards premium */}
       <div className="services-list">
-
-        <div className="service-card">
-          <h4>Manicure Tradicional</h4>
-          <p>Ideal para quem quer unhas lindas e bem cuidadas.</p>
-          <button className="service-btn">Agendar</button>
-        </div>
-
-        <div className="service-card">
-          <h4>Alongamento em Gel</h4>
-          <p>Unhas mais longas, resistentes e naturais.</p>
-          <button className="service-btn">Agendar</button>
-        </div>
-
-        <div className="service-card">
-          <h4>Blindagem</h4>
-          <p>Proteção extra, brilho e durabilidade máxima.</p>
-          <button className="service-btn">Agendar</button>
-        </div>
-
+        {services.map((s, i) => (
+          <div key={i} className="service-card">
+            <h4>{s.name}</h4>
+            <p>{s.description}</p>
+            <button
+              className="service-btn"
+              onClick={() => navigate('/booking')}
+            >
+              Agendar
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -103,10 +103,7 @@ function Login() {
             </Link>
           </div>
 
-          <div className="demo-credentials">
-            <p className="demo-title">Credenciais de teste:</p>
-            <p className="demo-info">Admin: vitoria@naildesigner.com / admin123</p>
-          </div>
+        
         </form>
       </div>
     </div>
