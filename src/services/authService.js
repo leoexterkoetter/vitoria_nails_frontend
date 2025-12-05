@@ -2,13 +2,18 @@ import api from './api';
 
 const authService = {
   // Registrar novo usuário
-  register: async (userData) => {
+  register: async (name, email, password) => {
     try {
-      const response = await api.post('/auth/register', userData);
+      const response = await api.post('/auth/register', {
+        name,
+        email,
+        password
+      });
       
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
+        localStorage.setItem('userName', response.data.user.name);
       }
       
       return response.data;
@@ -17,14 +22,18 @@ const authService = {
     }
   },
 
-  // Login
-  login: async (credentials) => {
+  // Login - CORRIGIDO: recebe email e password como parâmetros separados
+  login: async (email, password) => {
     try {
-      const response = await api.post('/auth/login', credentials);
+      const response = await api.post('/auth/login', {
+        email,
+        password
+      });
       
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
+        localStorage.setItem('userName', response.data.user.name);
       }
       
       return response.data;
@@ -37,6 +46,7 @@ const authService = {
   logout: () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    localStorage.removeItem('userName');
     window.location.href = '/login';
   },
 
