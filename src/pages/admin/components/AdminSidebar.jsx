@@ -8,7 +8,7 @@ import {
   LogOut,
   X
 } from 'lucide-react';
-import authService from '../../services/authService';
+import authService from '../../../services/authService';
 
 export default function AdminSidebar({ isOpen, onClose }) {
   const navigate = useNavigate();
