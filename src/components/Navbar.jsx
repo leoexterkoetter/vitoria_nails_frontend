@@ -46,17 +46,7 @@ export default function Navbar() {
           <span>Agendados</span>
         </button>
 
-        
-
-        {/* Perfil */}
-        <button
-          className={`nav-link ${isActive('/profile') ? 'active' : ''}`}
-          onClick={() => navigate('/profile')}
-        >
-          <User />
-          <span>Perfil</span>
-        </button>
-
+     
         {/* Logout */}
         <button className="nav-link logout" onClick={handleLogout}>
           <LogOut />
