@@ -74,6 +74,11 @@ body {
   background: var(--background);
   color: var(--text);
   line-height: 1.65;
+
+  /* FIX para iPhone / Android com navbar fixa */
+  padding-bottom: calc(80px + env(safe-area-inset-bottom));
+  /* fallback */
+  padding-bottom: 90px;
 }
 
 /* Scrollbar */
@@ -117,6 +122,12 @@ a:hover {
   max-width: 1200px;
   margin: auto;
   padding: 0 var(--spacing-lg);
+}
+
+/* Conteúdo principal (para evitar navbar cobrindo) */
+.main-content {
+  padding-bottom: calc(95px + env(safe-area-inset-bottom));
+  padding-top: env(safe-area-inset-top);
 }
 
 /* ==========================================================
