@@ -10,7 +10,7 @@ import {
 import api from '../../services/api';
 import AdminSidebar from './components/AdminSidebar';
 import AdminMobileHeader from './components/AdminMobileHeader';
-import './AdminStyles.css';
+import '../admin/AdminStyles.css';
 
 export default function Appointments() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -78,12 +78,12 @@ export default function Appointments() {
 
   const getStatusClass = (status) => {
     const classes = {
-      pending: 'status-pending',
-      confirmed: 'status-confirmed',
-      cancelled: 'status-cancelled',
-      completed: 'status-completed'
+      pending: 'admin-status-pending',
+      confirmed: 'admin-status-confirmed',
+      cancelled: 'admin-status-cancelled',
+      completed: 'admin-status-completed'
     };
-    return classes[status] || 'status-pending';
+    return classes[status] || classes.pending;
   };
 
   const getStatusText = (status) => {
@@ -110,19 +110,19 @@ export default function Appointments() {
       <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <main className="admin-main">
-        <div className="page-header">
+        <div className="admin-page-header">
           <h1>Agendamentos</h1>
           <p>Gerencie todos os agendamentos do salão</p>
         </div>
 
-        <div className="content-card">
+        <div className="admin-content-card">
           {/* Filtros */}
-          <div className="filters-bar">
+          <div className="admin-filters-bar">
             <Filter size={18} style={{ color: '#94A3B8' }} />
             {filters.map((f) => (
               <button
                 key={f.value}
-                className={`filter-chip ${filter === f.value ? 'active' : ''}`}
+                className={`admin-filter-chip ${filter === f.value ? 'active' : ''}`}
                 onClick={() => setFilter(f.value)}
               >
                 {f.label}
@@ -132,37 +132,37 @@ export default function Appointments() {
 
           {/* Lista */}
           {loading ? (
-            <div className="loading-state">
-              <div className="spinner"></div>
+            <div className="admin-loading-state">
+              <div className="admin-spinner"></div>
               <p>Carregando agendamentos...</p>
             </div>
           ) : appointments.length === 0 ? (
-            <div className="empty-state">
+            <div className="admin-empty-state">
               <Calendar size={48} />
               <h3>Nenhum agendamento encontrado</h3>
               <p>Não há agendamentos com este filtro</p>
             </div>
           ) : (
-            <div className="appointments-list">
+            <div className="admin-appointments-list">
               {appointments.map((apt) => (
-                <div key={apt._id} className="appointment-item">
-                  <div className="appointment-avatar">
+                <div key={apt._id} className="admin-appointment-item">
+                  <div className="admin-appointment-avatar">
                     {apt.user?.name?.charAt(0).toUpperCase() || 'U'}
                   </div>
 
-                  <div className="appointment-info">
-                    <div className="appointment-name">
+                  <div className="admin-appointment-info">
+                    <div className="admin-appointment-name">
                       {apt.user?.name || '-'}
-                      <span className={`status-badge ${getStatusClass(apt.status)}`} style={{ marginLeft: '12px' }}>
+                      <span className={`admin-status-badge ${getStatusClass(apt.status)}`}>
                         {getStatusText(apt.status)}
                       </span>
                     </div>
-                    <div className="appointment-service">
+                    <div className="admin-appointment-service">
                       {apt.service?.name || '-'} • {formatCurrency(apt.service?.price)}
                     </div>
                   </div>
 
-                  <div className="appointment-meta">
+                  <div className="admin-appointment-meta">
                     <span>
                       <Calendar size={14} />
                       {formatDate(apt.timeSlot?.date)}
@@ -173,11 +173,11 @@ export default function Appointments() {
                     </span>
                   </div>
 
-                  <div className="appointment-actions">
+                  <div className="admin-appointment-actions">
                     {apt.status === 'pending' && (
                       <>
                         <button
-                          className="btn btn-success btn-sm"
+                          className="admin-btn admin-btn-success admin-btn-sm"
                           onClick={() => handleStatusChange(apt._id, 'confirmed')}
                           title="Confirmar"
                         >
@@ -185,19 +185,19 @@ export default function Appointments() {
                           Confirmar
                         </button>
                         <button
-                          className="btn btn-danger btn-sm"
+                          className="admin-btn admin-btn-danger admin-btn-sm"
                           onClick={() => handleStatusChange(apt._id, 'cancelled')}
                           title="Recusar"
                         >
                           <XCircle size={16} />
-                          Recusar
+                          Cancelar
                         </button>
                       </>
                     )}
                     
                     {apt.status === 'confirmed' && (
                       <button
-                        className="btn btn-primary btn-sm"
+                        className="admin-btn admin-btn-primary admin-btn-sm"
                         onClick={() => handleStatusChange(apt._id, 'completed')}
                       >
                         <CheckCircle size={16} />
@@ -206,7 +206,7 @@ export default function Appointments() {
                     )}
 
                     <button
-                      className="btn btn-icon btn-danger"
+                      className="admin-btn admin-btn-danger admin-btn-icon"
                       onClick={() => handleDelete(apt._id)}
                       title="Excluir"
                     >

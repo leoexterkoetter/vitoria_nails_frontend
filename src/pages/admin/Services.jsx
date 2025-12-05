@@ -5,13 +5,12 @@ import {
   Trash2, 
   X,
   Clock,
-  DollarSign,
   Scissors
 } from 'lucide-react';
 import api from '../../services/api';
 import AdminSidebar from './components/AdminSidebar';
 import AdminMobileHeader from './components/AdminMobileHeader';
-import './AdminStyles.css';
+import '../admin/AdminStyles.css';
 
 export default function Services() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -114,66 +113,66 @@ export default function Services() {
       <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <main className="admin-main">
-        <div className="page-header">
+        <div className="admin-page-header">
           <h1>Serviços</h1>
           <p>Gerencie os serviços oferecidos no salão</p>
-          <div className="page-header-actions">
-            <button className="btn btn-primary" onClick={() => setShowModal(true)}>
+          <div className="admin-page-header-actions">
+            <button className="admin-btn admin-btn-primary" onClick={() => setShowModal(true)}>
               <Plus size={18} />
               Novo Serviço
             </button>
           </div>
         </div>
 
-        <div className="content-card">
+        <div className="admin-content-card">
           {loading ? (
-            <div className="loading-state">
-              <div className="spinner"></div>
+            <div className="admin-loading-state">
+              <div className="admin-spinner"></div>
               <p>Carregando serviços...</p>
             </div>
           ) : services.length === 0 ? (
-            <div className="empty-state">
+            <div className="admin-empty-state">
               <Scissors size={48} />
               <h3>Nenhum serviço cadastrado</h3>
               <p>Adicione seu primeiro serviço</p>
-              <button className="btn btn-primary" onClick={() => setShowModal(true)}>
+              <button className="admin-btn admin-btn-primary" onClick={() => setShowModal(true)}>
                 <Plus size={18} />
                 Adicionar Serviço
               </button>
             </div>
           ) : (
-            <div className="services-grid">
+            <div className="admin-services-grid">
               {services.map((service) => (
-                <div key={service._id} className="service-card">
-                  <div className="service-card-header">
+                <div key={service._id} className="admin-service-card">
+                  <div className="admin-service-card-header">
                     <h3>{service.name}</h3>
-                    <span className={`service-card-badge ${service.active ? 'active' : 'inactive'}`}>
+                    <span className={`admin-service-card-badge ${service.active ? 'active' : 'inactive'}`}>
                       {service.active ? 'Ativo' : 'Inativo'}
                     </span>
                   </div>
                   
                   <p>{service.description || 'Sem descrição'}</p>
                   
-                  <div className="service-card-meta">
+                  <div className="admin-service-card-meta">
                     <span>
                       <Clock size={16} />
                       {service.duration || 0} min
                     </span>
-                    <span className="service-price">
+                    <span className="admin-service-price">
                       {formatCurrency(service.price)}
                     </span>
                   </div>
 
-                  <div className="service-card-actions">
+                  <div className="admin-service-card-actions">
                     <button 
-                      className="btn btn-secondary btn-sm"
+                      className="admin-btn admin-btn-secondary admin-btn-sm"
                       onClick={() => handleEdit(service)}
                     >
                       <Edit2 size={14} />
                       Editar
                     </button>
                     <button 
-                      className="btn btn-danger btn-sm"
+                      className="admin-btn admin-btn-danger admin-btn-sm"
                       onClick={() => handleDelete(service._id)}
                     >
                       <Trash2 size={14} />
@@ -188,22 +187,22 @@ export default function Services() {
 
         {/* Modal */}
         {showModal && (
-          <div className="modal-overlay" onClick={() => { setShowModal(false); resetForm(); }}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <div className="modal-header">
+          <div className="admin-modal-overlay" onClick={() => { setShowModal(false); resetForm(); }}>
+            <div className="admin-modal-content" onClick={(e) => e.stopPropagation()}>
+              <div className="admin-modal-header">
                 <h2>{editingService ? 'Editar Serviço' : 'Novo Serviço'}</h2>
-                <button className="modal-close" onClick={() => { setShowModal(false); resetForm(); }}>
+                <button className="admin-modal-close" onClick={() => { setShowModal(false); resetForm(); }}>
                   <X size={20} />
                 </button>
               </div>
 
               <form onSubmit={handleSubmit}>
-                <div className="modal-body">
-                  <div className="form-group">
-                    <label className="form-label">Nome do Serviço *</label>
+                <div className="admin-modal-body">
+                  <div className="admin-form-group">
+                    <label className="admin-form-label">Nome do Serviço *</label>
                     <input
                       type="text"
-                      className="form-input"
+                      className="admin-form-input"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder="Ex: Alongamento em Gel"
@@ -211,10 +210,10 @@ export default function Services() {
                     />
                   </div>
 
-                  <div className="form-group">
-                    <label className="form-label">Descrição</label>
+                  <div className="admin-form-group">
+                    <label className="admin-form-label">Descrição</label>
                     <textarea
-                      className="form-textarea"
+                      className="admin-form-textarea"
                       rows="3"
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -222,12 +221,12 @@ export default function Services() {
                     />
                   </div>
 
-                  <div className="form-row">
-                    <div className="form-group">
-                      <label className="form-label">Preço (R$) *</label>
+                  <div className="admin-form-row">
+                    <div className="admin-form-group">
+                      <label className="admin-form-label">Preço (R$) *</label>
                       <input
                         type="number"
-                        className="form-input"
+                        className="admin-form-input"
                         step="0.01"
                         value={formData.price}
                         onChange={(e) => setFormData({ ...formData, price: e.target.value })}
@@ -236,11 +235,11 @@ export default function Services() {
                       />
                     </div>
 
-                    <div className="form-group">
-                      <label className="form-label">Duração (min) *</label>
+                    <div className="admin-form-group">
+                      <label className="admin-form-label">Duração (min) *</label>
                       <input
                         type="number"
-                        className="form-input"
+                        className="admin-form-input"
                         value={formData.duration}
                         onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
                         placeholder="60"
@@ -249,10 +248,10 @@ export default function Services() {
                     </div>
                   </div>
 
-                  <div className="form-group">
-                    <label className="form-label">Categoria *</label>
+                  <div className="admin-form-group">
+                    <label className="admin-form-label">Categoria *</label>
                     <select
-                      className="form-select"
+                      className="admin-form-select"
                       value={formData.category}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                       required
@@ -263,8 +262,8 @@ export default function Services() {
                     </select>
                   </div>
 
-                  <div className="form-group">
-                    <label className="form-checkbox">
+                  <div className="admin-form-group">
+                    <label className="admin-form-checkbox">
                       <input
                         type="checkbox"
                         checked={formData.active}
@@ -275,15 +274,15 @@ export default function Services() {
                   </div>
                 </div>
 
-                <div className="modal-footer">
+                <div className="admin-modal-footer">
                   <button 
                     type="button" 
-                    className="btn btn-secondary"
+                    className="admin-btn admin-btn-secondary"
                     onClick={() => { setShowModal(false); resetForm(); }}
                   >
                     Cancelar
                   </button>
-                  <button type="submit" className="btn btn-primary">
+                  <button type="submit" className="admin-btn admin-btn-primary">
                     {editingService ? 'Salvar Alterações' : 'Criar Serviço'}
                   </button>
                 </div>

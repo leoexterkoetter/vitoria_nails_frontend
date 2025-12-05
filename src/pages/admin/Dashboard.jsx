@@ -11,7 +11,7 @@ import {
 import api from '../../services/api';
 import AdminSidebar from './components/AdminSidebar';
 import AdminMobileHeader from './components/AdminMobileHeader';
-import './AdminStyles.css';
+import '../admin/AdminStyles.css';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -67,12 +67,12 @@ export default function Dashboard() {
 
   const getStatusClass = (status) => {
     const classes = {
-      pending: 'status-pending',
-      confirmed: 'status-confirmed',
-      cancelled: 'status-cancelled',
-      completed: 'status-completed'
+      pending: 'admin-status-pending',
+      confirmed: 'admin-status-confirmed',
+      cancelled: 'admin-status-cancelled',
+      completed: 'admin-status-completed'
     };
-    return classes[status] || 'status-pending';
+    return classes[status] || classes.pending;
   };
 
   const getStatusText = (status) => {
@@ -98,72 +98,72 @@ export default function Dashboard() {
       />
 
       <main className="admin-main">
-        <div className="page-header">
+        <div className="admin-page-header">
           <h1>Dashboard</h1>
           <p>Visão geral do seu negócio</p>
         </div>
 
         {/* Stats Cards */}
-        <div className="stats-grid">
-          <div className="stat-card">
-            <div className="stat-card-header">
-              <div className="stat-icon pink">
+        <div className="admin-stats-grid">
+          <div className="admin-stat-card">
+            <div className="admin-stat-card-header">
+              <div className="admin-stat-icon pink">
                 <Calendar size={24} />
               </div>
-              <span className="stat-trend up">
+              <span className="admin-stat-trend up">
                 <TrendingUp size={12} />
                 12%
               </span>
             </div>
-            <div className="stat-value">{stats.totalAppointments}</div>
-            <div className="stat-label">Total de Agendamentos</div>
+            <div className="admin-stat-value">{stats.totalAppointments}</div>
+            <div className="admin-stat-label">Total de Agendamentos</div>
           </div>
 
-          <div className="stat-card">
-            <div className="stat-card-header">
-              <div className="stat-icon orange">
+          <div className="admin-stat-card">
+            <div className="admin-stat-card-header">
+              <div className="admin-stat-icon orange">
                 <Clock size={24} />
               </div>
             </div>
-            <div className="stat-value">{stats.pendingAppointments}</div>
-            <div className="stat-label">Pendentes</div>
+            <div className="admin-stat-value">{stats.pendingAppointments}</div>
+            <div className="admin-stat-label">Pendentes</div>
           </div>
 
-          <div className="stat-card">
-            <div className="stat-card-header">
-              <div className="stat-icon blue">
+          <div className="admin-stat-card">
+            <div className="admin-stat-card-header">
+              <div className="admin-stat-icon blue">
                 <Users size={24} />
               </div>
-              <span className="stat-trend up">
+              <span className="admin-stat-trend up">
                 <TrendingUp size={12} />
                 8%
               </span>
             </div>
-            <div className="stat-value">{stats.totalClients}</div>
-            <div className="stat-label">Clientes Cadastrados</div>
+            <div className="admin-stat-value">{stats.totalClients}</div>
+            <div className="admin-stat-label">Clientes Cadastrados</div>
           </div>
 
-          <div className="stat-card">
-            <div className="stat-card-header">
-              <div className="stat-icon green">
+          <div className="admin-stat-card">
+            <div className="admin-stat-card-header">
+              <div className="admin-stat-icon green">
                 <DollarSign size={24} />
               </div>
-              <span className="stat-trend up">
+              <span className="admin-stat-trend up">
                 <TrendingUp size={12} />
                 23%
               </span>
             </div>
-            <div className="stat-value">{formatCurrency(stats.monthRevenue)}</div>
-            <div className="stat-label">Receita do Mês</div>
+            <div className="admin-stat-value">{formatCurrency(stats.monthRevenue)}</div>
+            <div className="admin-stat-label">Receita do Mês</div>
           </div>
         </div>
 
         {/* Recent Appointments */}
-        <div className="content-card">
-          <div className="card-header">
+        <div className="admin-content-card">
+          <div className="admin-card-header">
             <h2>Agendamentos Recentes</h2>
             <button 
-              className="btn btn-outline btn-sm"
+              className="admin-btn admin-btn-outline admin-btn-sm"
               onClick={() => navigate('/admin/appointments')}
             >
               Ver Todos
@@ -172,30 +172,35 @@ export default function Dashboard() {
           </div>
 
           {loading ? (
-            <div className="loading-state">
-              <div className="spinner"></div>
+            <div className="admin-loading-state">
+              <div className="admin-spinner"></div>
               <p>Carregando...</p>
             </div>
           ) : recentAppointments.length === 0 ? (
-            <div className="empty-state">
+            <div className="admin-empty-state">
               <Calendar size={48} />
               <h3>Nenhum agendamento</h3>
               <p>Os agendamentos aparecerão aqui</p>
             </div>
           ) : (
-            <div className="appointments-list">
+            <div className="admin-appointments-list">
               {recentAppointments.map((apt) => (
-                <div key={apt._id} className="appointment-item">
-                  <div className="appointment-avatar">
+                <div key={apt._id} className="admin-appointment-item">
+                  <div className="admin-appointment-avatar">
                     {apt.user?.name?.charAt(0).toUpperCase() || 'U'}
                   </div>
                   
-                  <div className="appointment-info">
-                    <div className="appointment-name">{apt.user?.name || '-'}</div>
-                    <div className="appointment-service">{apt.service?.name || '-'}</div>
+                  <div className="admin-appointment-info">
+                    <div className="admin-appointment-name">
+                      {apt.user?.name || '-'}
+                      <span className={`admin-status-badge ${getStatusClass(apt.status)}`}>
+                        {getStatusText(apt.status)}
+                      </span>
+                    </div>
+                    <div className="admin-appointment-service">{apt.service?.name || '-'}</div>
                   </div>
 
-                  <div className="appointment-meta">
+                  <div className="admin-appointment-meta">
                     <span>
                       <Calendar size={14} />
                       {formatDate(apt.timeSlot?.date)}
@@ -205,10 +210,6 @@ export default function Dashboard() {
                       {apt.timeSlot?.start_time || '-'}
                     </span>
                   </div>
-
-                  <span className={`status-badge ${getStatusClass(apt.status)}`}>
-                    {getStatusText(apt.status)}
-                  </span>
                 </div>
               ))}
             </div>
