@@ -127,12 +127,12 @@ function App() {
           }
         />
 
-        {/* ROTAS ADMIN COM NAVBAR */}
+        {/* ROTAS ADMIN - SEM AppLayout (tem sidebar própria) */}
         <Route
           path="/admin/dashboard"
           element={
             <PrivateRoute adminOnly>
-              <AppLayout><AdminDashboard /></AppLayout>
+              <AdminDashboard />
             </PrivateRoute>
           }
         />
@@ -141,7 +141,7 @@ function App() {
           path="/admin/time-slots"
           element={
             <PrivateRoute adminOnly>
-              <AppLayout><AdminTimeSlots /></AppLayout>
+              <AdminTimeSlots />
             </PrivateRoute>
           }
         />
@@ -150,7 +150,7 @@ function App() {
           path="/admin/services"
           element={
             <PrivateRoute adminOnly>
-              <AppLayout><AdminServices /></AppLayout>
+              <AdminServices />
             </PrivateRoute>
           }
         />
@@ -159,7 +159,7 @@ function App() {
           path="/admin/clients"
           element={
             <PrivateRoute adminOnly>
-              <AppLayout><AdminClients /></AppLayout>
+              <AdminClients />
             </PrivateRoute>
           }
         />
@@ -168,7 +168,7 @@ function App() {
           path="/admin/appointments"
           element={
             <PrivateRoute adminOnly>
-              <AppLayout><AdminAppointments /></AppLayout>
+              <AdminAppointments />
             </PrivateRoute>
           }
         />

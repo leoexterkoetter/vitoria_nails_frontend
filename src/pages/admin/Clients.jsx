@@ -1,12 +1,17 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Calendar, Users, Clock, TrendingUp, LogOut, Mail, Phone } from 'lucide-react';
+import { 
+  Users,
+  Mail,
+  Phone,
+  Calendar
+} from 'lucide-react';
 import api from '../../services/api';
-import authService from '../../services/authService';
-import './Dashboard.css';
+import AdminSidebar from './components/AdminSidebar';
+import AdminMobileHeader from './components/AdminMobileHeader';
+import './AdminStyles.css';
 
-function Clients() {
-  const navigate = useNavigate();
+export default function Clients() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -17,7 +22,7 @@ function Clients() {
   const fetchClients = async () => {
     try {
       const response = await api.get('/admin/clients');
-      setClients(response.data.clients);
+      setClients(response.data.clients || []);
     } catch (error) {
       console.error('Erro:', error);
     } finally {
@@ -25,95 +30,95 @@ function Clients() {
     }
   };
 
-  const handleLogout = () => {
-    authService.logout();
-    navigate('/login');
+  const formatDate = (dateString) => {
+    if (!dateString) return '-';
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return '-';
+      return date.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      });
+    } catch {
+      return '-';
+    }
   };
 
   return (
-    <div className="admin-dashboard">
-      <aside className="sidebar">
-        <div className="sidebar-header">
-          <h2>💅 Admin</h2>
-        </div>
-        <nav className="sidebar-nav">
-          <button className="nav-item" onClick={() => navigate('/admin/dashboard')}>
-            <TrendingUp size={20} />
-            Dashboard
-          </button>
-          <button className="nav-item" onClick={() => navigate('/admin/appointments')}>
-            <Calendar size={20} />
-            Agendamentos
-          </button>
-          <button className="nav-item" onClick={() => navigate('/admin/services')}>
-            <Clock size={20} />
-            Serviços
-          </button>
-          <button className="nav-item" onClick={() => navigate('/admin/time-slots')}>
-  <Clock size={20} />
-  Horários
-</button>
-          <button className="nav-item active" onClick={() => navigate('/admin/clients')}>
-            <Users size={20} />
-            Clientes
-          </button>
-        </nav>
-        <button className="logout-btn" onClick={handleLogout}>
-          <LogOut size={20} />
-          Sair
-        </button>
-      </aside>
+    <div className="admin-layout">
+      <AdminMobileHeader onMenuClick={() => setSidebarOpen(true)} />
+      <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      <main className="main-content">
-        <header className="content-header">
+      <main className="admin-main">
+        <div className="page-header">
           <h1>Clientes</h1>
-        </header>
+          <p>Lista de todos os clientes cadastrados</p>
+        </div>
 
-        <div className="table-card">
+        <div className="content-card">
           {loading ? (
-            <div className="loading-container"><div className="spinner"></div></div>
+            <div className="loading-state">
+              <div className="spinner"></div>
+              <p>Carregando clientes...</p>
+            </div>
+          ) : clients.length === 0 ? (
+            <div className="empty-state">
+              <Users size={48} />
+              <h3>Nenhum cliente cadastrado</h3>
+              <p>Os clientes aparecerão aqui após se cadastrarem</p>
+            </div>
           ) : (
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>Nome</th>
-                  <th>Email</th>
-                  <th>Telefone</th>
-                  <th>Cadastrado em</th>
-                </tr>
-              </thead>
-              <tbody>
-                {clients.map(client => (
-                  <tr key={client._id}>
-                    <td>
-                      <div className="table-name">{client.name}</div>
-                    </td>
-                    <td>
-                      <div className="contact-info">
-                        <Mail size={16} />
-                        {client.email}
-                      </div>
-                    </td>
-                    <td>
-                      {client.phone ? (
-                        <div className="contact-info">
-                          <Phone size={16} />
-                          {client.phone}
-                        </div>
-                      ) : (
-                        <span className="text-muted">-</span>
-                      )}
-                    </td>
-                    <td>{new Date(client.createdAt).toLocaleDateString('pt-BR')}</td>
+            <div className="clients-table-wrapper">
+              <table className="data-table">
+                <thead>
+                  <tr>
+                    <th>Cliente</th>
+                    <th>Contato</th>
+                    <th>Cadastrado em</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {clients.map((client) => (
+                    <tr key={client._id}>
+                      <td>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                          <div className="appointment-avatar" style={{ width: '40px', height: '40px', fontSize: '0.9rem' }}>
+                            {client.name?.charAt(0).toUpperCase() || 'U'}
+                          </div>
+                          <div>
+                            <div className="table-cell-main">{client.name}</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', color: '#64748B' }}>
+                            <Mail size={14} />
+                            {client.email}
+                          </span>
+                          {client.phone && (
+                            <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', color: '#64748B' }}>
+                              <Phone size={14} />
+                              {client.phone}
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', color: '#64748B' }}>
+                          <Calendar size={14} />
+                          {formatDate(client.createdAt)}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       </main>
     </div>
   );
 }
-
-export default Clients;
