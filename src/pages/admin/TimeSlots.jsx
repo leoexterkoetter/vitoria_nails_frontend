@@ -161,44 +161,44 @@ export default function TimeSlots() {
       <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <main className="admin-main">
-        <div className="page-header">
+        <div className="admin-page-header">
           <h1>Horários</h1>
           <p>Gerencie os horários disponíveis para agendamento</p>
-          <div className="page-header-actions">
-            <button className="btn btn-primary" onClick={() => setShowModal(true)}>
+          <div className="admin-page-header-actions">
+            <button className="admin-btn admin-btn-primary" onClick={() => setShowModal(true)}>
               <Plus size={18} />
               Criar Horários
             </button>
           </div>
         </div>
 
-        <div className="content-card">
+        <div className="admin-content-card">
           {loading ? (
-            <div className="loading-state">
-              <div className="spinner"></div>
+            <div className="admin-loading-state">
+              <div className="admin-spinner"></div>
               <p>Carregando horários...</p>
             </div>
           ) : Object.keys(groupedSlots).length === 0 ? (
-            <div className="empty-state">
+            <div className="admin-empty-state">
               <Clock size={48} />
               <h3>Nenhum horário cadastrado</h3>
               <p>Adicione horários para que clientes possam agendar</p>
-              <button className="btn btn-primary" onClick={() => setShowModal(true)}>
+              <button className="admin-btn admin-btn-primary" onClick={() => setShowModal(true)}>
                 <Plus size={18} />
                 Criar Horários
               </button>
             </div>
           ) : (
-            <div className="timeslots-container">
+            <div className="admin-timeslots-container">
               {Object.entries(groupedSlots).map(([date, dateSlots]) => (
-                <div key={date} className="date-group">
-                  <div className="date-group-header">
+                <div key={date} className="admin-date-group">
+                  <div className="admin-date-group-header">
                     <h3>
                       <Calendar size={18} />
                       {date}
                     </h3>
                     <button 
-                      className="btn btn-danger btn-sm"
+                      className="admin-btn admin-btn-danger admin-btn-sm"
                       onClick={() => handleDeleteDay(dateSlots)}
                     >
                       <Trash2 size={14} />
@@ -206,23 +206,25 @@ export default function TimeSlots() {
                     </button>
                   </div>
 
-                  <div className="slots-grid">
+                  <div className="admin-slots-grid">
                     {dateSlots.map((slot) => (
-                      <div key={slot._id} className="slot-card">
+                      <div key={slot._id} className="admin-slot-card">
                         <div>
-                          <div className="slot-time">
+                          <div className="admin-slot-time">
                             {slot.start_time} - {slot.end_time}
                           </div>
-                          <span className={`slot-status ${slot.available ? 'available' : 'occupied'}`}>
+                          <span className={`admin-slot-status ${slot.available ? 'available' : 'occupied'}`}>
                             {slot.available ? 'Disponível' : 'Ocupado'}
                           </span>
                         </div>
-                        <button 
-                          className="slot-delete"
-                          onClick={() => handleDelete(slot._id)}
-                        >
-                          <Trash2 size={14} />
-                        </button>
+                        {slot.available && (
+                          <button 
+                            className="admin-slot-delete"
+                            onClick={() => handleDelete(slot._id)}
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -234,28 +236,28 @@ export default function TimeSlots() {
 
         {/* Modal */}
         {showModal && (
-          <div className="modal-overlay" onClick={() => { setShowModal(false); resetForm(); }}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '550px' }}>
-              <div className="modal-header">
+          <div className="admin-modal-overlay" onClick={() => { setShowModal(false); resetForm(); }}>
+            <div className="admin-modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '550px' }}>
+              <div className="admin-modal-header">
                 <h2>Criar Horários</h2>
-                <button className="modal-close" onClick={() => { setShowModal(false); resetForm(); }}>
+                <button className="admin-modal-close" onClick={() => { setShowModal(false); resetForm(); }}>
                   <X size={20} />
                 </button>
               </div>
 
-              <div className="modal-body">
+              <div className="admin-modal-body">
                 {/* Mode Switch */}
-                <div className="mode-switch">
+                <div className="admin-mode-switch">
                   <button
                     type="button"
-                    className={`mode-btn ${!batchMode ? 'active' : ''}`}
+                    className={`admin-mode-btn ${!batchMode ? 'active' : ''}`}
                     onClick={() => setBatchMode(false)}
                   >
                     Único
                   </button>
                   <button
                     type="button"
-                    className={`mode-btn ${batchMode ? 'active' : ''}`}
+                    className={`admin-mode-btn ${batchMode ? 'active' : ''}`}
                     onClick={() => setBatchMode(true)}
                   >
                     Em Lote
@@ -264,33 +266,33 @@ export default function TimeSlots() {
 
                 {!batchMode ? (
                   <form onSubmit={handleSubmitSingle}>
-                    <div className="form-group">
-                      <label className="form-label">Data *</label>
+                    <div className="admin-form-group">
+                      <label className="admin-form-label">Data *</label>
                       <input
                         type="date"
-                        className="form-input"
+                        className="admin-form-input"
                         value={formData.date}
                         onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                         required
                       />
                     </div>
 
-                    <div className="form-row">
-                      <div className="form-group">
-                        <label className="form-label">Início *</label>
+                    <div className="admin-form-row">
+                      <div className="admin-form-group">
+                        <label className="admin-form-label">Início *</label>
                         <input
                           type="time"
-                          className="form-input"
+                          className="admin-form-input"
                           value={formData.start_time}
                           onChange={(e) => setFormData({ ...formData, start_time: e.target.value })}
                           required
                         />
                       </div>
-                      <div className="form-group">
-                        <label className="form-label">Fim *</label>
+                      <div className="admin-form-group">
+                        <label className="admin-form-label">Fim *</label>
                         <input
                           type="time"
-                          className="form-input"
+                          className="admin-form-input"
                           value={formData.end_time}
                           onChange={(e) => setFormData({ ...formData, end_time: e.target.value })}
                           required
@@ -298,33 +300,33 @@ export default function TimeSlots() {
                       </div>
                     </div>
 
-                    <div className="modal-footer" style={{ padding: '16px 0 0', borderTop: 'none' }}>
-                      <button type="button" className="btn btn-secondary" onClick={() => { setShowModal(false); resetForm(); }}>
+                    <div className="admin-modal-footer" style={{ padding: '16px 0 0', borderTop: 'none' }}>
+                      <button type="button" className="admin-btn admin-btn-secondary" onClick={() => { setShowModal(false); resetForm(); }}>
                         Cancelar
                       </button>
-                      <button type="submit" className="btn btn-primary">
+                      <button type="submit" className="admin-btn admin-btn-primary">
                         Criar Horário
                       </button>
                     </div>
                   </form>
                 ) : (
                   <form onSubmit={handleSubmitBatch}>
-                    <div className="form-row">
-                      <div className="form-group">
-                        <label className="form-label">Data Início *</label>
+                    <div className="admin-form-row">
+                      <div className="admin-form-group">
+                        <label className="admin-form-label">Data Início *</label>
                         <input
                           type="date"
-                          className="form-input"
+                          className="admin-form-input"
                           value={batchData.start_date}
                           onChange={(e) => setBatchData({ ...batchData, start_date: e.target.value })}
                           required
                         />
                       </div>
-                      <div className="form-group">
-                        <label className="form-label">Data Fim *</label>
+                      <div className="admin-form-group">
+                        <label className="admin-form-label">Data Fim *</label>
                         <input
                           type="date"
-                          className="form-input"
+                          className="admin-form-input"
                           value={batchData.end_date}
                           onChange={(e) => setBatchData({ ...batchData, end_date: e.target.value })}
                           required
@@ -332,11 +334,11 @@ export default function TimeSlots() {
                       </div>
                     </div>
 
-                    <div className="form-group">
-                      <label className="form-label">Horários do Dia</label>
-                      <div className="times-list">
+                    <div className="admin-form-group">
+                      <label className="admin-form-label">Horários do Dia</label>
+                      <div className="admin-times-list">
                         {batchData.times.map((time, index) => (
-                          <div key={index} className="time-item">
+                          <div key={index} className="admin-time-item">
                             <input
                               type="time"
                               value={time.start_time}
@@ -350,7 +352,7 @@ export default function TimeSlots() {
                             />
                             <button
                               type="button"
-                              className="btn-remove"
+                              className="admin-btn-remove"
                               onClick={() => removeTimeSlot(index)}
                             >
                               <X size={14} />
@@ -360,19 +362,20 @@ export default function TimeSlots() {
                       </div>
                       <button
                         type="button"
-                        className="btn btn-secondary btn-sm"
+                        className="admin-btn admin-btn-secondary admin-btn-sm"
                         onClick={addTimeSlot}
+                        style={{ marginTop: '12px' }}
                       >
                         <Plus size={14} />
                         Adicionar Horário
                       </button>
                     </div>
 
-                    <div className="modal-footer" style={{ padding: '16px 0 0', borderTop: 'none' }}>
-                      <button type="button" className="btn btn-secondary" onClick={() => { setShowModal(false); resetForm(); }}>
+                    <div className="admin-modal-footer" style={{ padding: '16px 0 0', borderTop: 'none' }}>
+                      <button type="button" className="admin-btn admin-btn-secondary" onClick={() => { setShowModal(false); resetForm(); }}>
                         Cancelar
                       </button>
-                      <button type="submit" className="btn btn-primary">
+                      <button type="submit" className="admin-btn admin-btn-primary">
                         Criar Horários
                       </button>
                     </div>

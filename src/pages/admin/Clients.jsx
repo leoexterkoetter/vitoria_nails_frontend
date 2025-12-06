@@ -51,26 +51,26 @@ export default function Clients() {
       <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <main className="admin-main">
-        <div className="page-header">
+        <div className="admin-page-header">
           <h1>Clientes</h1>
           <p>Lista de todos os clientes cadastrados</p>
         </div>
 
-        <div className="content-card">
+        <div className="admin-content-card">
           {loading ? (
-            <div className="loading-state">
-              <div className="spinner"></div>
+            <div className="admin-loading-state">
+              <div className="admin-spinner"></div>
               <p>Carregando clientes...</p>
             </div>
           ) : clients.length === 0 ? (
-            <div className="empty-state">
+            <div className="admin-empty-state">
               <Users size={48} />
               <h3>Nenhum cliente cadastrado</h3>
               <p>Os clientes aparecerão aqui após se cadastrarem</p>
             </div>
           ) : (
-            <div className="clients-table-wrapper">
-              <table className="data-table">
+            <div className="admin-clients-table-wrapper">
+              <table className="admin-data-table">
                 <thead>
                   <tr>
                     <th>Cliente</th>
@@ -82,23 +82,21 @@ export default function Clients() {
                   {clients.map((client) => (
                     <tr key={client._id}>
                       <td>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                          <div className="appointment-avatar" style={{ width: '40px', height: '40px', fontSize: '0.9rem' }}>
+                        <div className="admin-client-cell">
+                          <div className="admin-client-avatar">
                             {client.name?.charAt(0).toUpperCase() || 'U'}
                           </div>
-                          <div>
-                            <div className="table-cell-main">{client.name}</div>
-                          </div>
+                          <div className="admin-client-name">{client.name}</div>
                         </div>
                       </td>
                       <td>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                          <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', color: '#64748B' }}>
+                        <div className="admin-contact-info">
+                          <span className="admin-contact-item">
                             <Mail size={14} />
                             {client.email}
                           </span>
                           {client.phone && (
-                            <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', color: '#64748B' }}>
+                            <span className="admin-contact-item">
                               <Phone size={14} />
                               {client.phone}
                             </span>
@@ -106,7 +104,7 @@ export default function Clients() {
                         </div>
                       </td>
                       <td>
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', color: '#64748B' }}>
+                        <span className="admin-date-item">
                           <Calendar size={14} />
                           {formatDate(client.createdAt)}
                         </span>

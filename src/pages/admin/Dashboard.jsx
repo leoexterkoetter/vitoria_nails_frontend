@@ -11,7 +11,7 @@ import {
 import api from '../../services/api';
 import AdminSidebar from './components/AdminSidebar';
 import AdminMobileHeader from './components/AdminMobileHeader';
-import '../admin/AdminStyles.css';
+import './AdminStyles.css';
 
 export default function Dashboard() {
   const navigate = useNavigate();

@@ -31,8 +31,8 @@ function PrivateRoute({ children, adminOnly = false }) {
   return children;
 }
 
-// Layout com Navbar
-function AppLayout({ children }) {
+// Layout com Navbar - APENAS PARA USUÁRIOS (NÃO ADMIN)
+function UserLayout({ children }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Navbar />
@@ -68,12 +68,14 @@ function App() {
     <Router>
       <Routes>
 
-        {/* ROTAS PÚBLICAS */}
+        {/* ROTAS PÚBLICAS (sem layout) */}
         <Route
           path="/"
           element={
             authService.isAuthenticated()
-              ? <Navigate to="/home" />
+              ? authService.isAdmin()
+                ? <Navigate to="/admin/dashboard" />
+                : <Navigate to="/home" />
               : <Navigate to="/login" />
           }
         />
@@ -81,12 +83,14 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* ROTAS COM NAVBAR */}
+        {/* ==========================================
+            ROTAS DE USUÁRIO - COM NAVBAR
+            ========================================== */}
         <Route
           path="/home"
           element={
             <PrivateRoute>
-              <AppLayout><Home /></AppLayout>
+              <UserLayout><Home /></UserLayout>
             </PrivateRoute>
           }
         />
@@ -95,7 +99,7 @@ function App() {
           path="/services"
           element={
             <PrivateRoute>
-              <AppLayout><Services /></AppLayout>
+              <UserLayout><Services /></UserLayout>
             </PrivateRoute>
           }
         />
@@ -104,7 +108,7 @@ function App() {
           path="/booking"
           element={
             <PrivateRoute>
-              <AppLayout><Booking /></AppLayout>
+              <UserLayout><Booking /></UserLayout>
             </PrivateRoute>
           }
         />
@@ -113,7 +117,7 @@ function App() {
           path="/my-appointments"
           element={
             <PrivateRoute>
-              <AppLayout><MyAppointments /></AppLayout>
+              <UserLayout><MyAppointments /></UserLayout>
             </PrivateRoute>
           }
         />
@@ -122,12 +126,25 @@ function App() {
           path="/profile"
           element={
             <PrivateRoute>
-              <AppLayout><Profile /></AppLayout>
+              <UserLayout><Profile /></UserLayout>
             </PrivateRoute>
           }
         />
 
-        {/* ROTAS ADMIN - SEM AppLayout (tem sidebar própria) */}
+        {/* ==========================================
+            ROTAS ADMIN - SEM NAVBAR (sidebar própria)
+            ========================================== */}
+        
+        {/* Redirecionar /admin para /admin/dashboard */}
+        <Route
+          path="/admin"
+          element={
+            <PrivateRoute adminOnly>
+              <Navigate to="/admin/dashboard" replace />
+            </PrivateRoute>
+          }
+        />
+
         <Route
           path="/admin/dashboard"
           element={
